@@ -8,9 +8,17 @@ Class {
 }
 
 { #category : #tests }
-Murmur3Test >> testMurmur3For32Bits [
-	| hasher output |
+Murmur3Test >> testMurmur3WithOne32BitBlock [
+   | hasher output |
 	hasher := Murmur3 withSeed: 1234.
 	output := hasher hash: #(10 20 30 40 50).
 	self assert: output hex equals: '8dc7e049'
+]
+
+{ #category : #tests }
+Murmur3Test >> testMurmur3WithSeveral32BitBlocks [
+	| hasher output |
+	hasher := Murmur3 withSeed: 1234.
+	output := hasher hash: #(10 20 30 40 50 51 52 53 54).
+	self assert: output hex equals: '7ed80878'
 ]
