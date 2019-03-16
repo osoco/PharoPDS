@@ -10,9 +10,9 @@ Class {
 { #category : #tests }
 Murmur3Test >> testMurmur3WithOne32BitBlock [
 	| hasher output |
-	hasher := Murmur3 withSeed: 1234.
-	output := hasher hash: #(100 101 102 103).
-	self assert: (output printStringBase: 16) equals: '886f11a1'
+	hasher := Murmur3 withSeed: 0.
+	output := hasher hash: #(0 0 0 0).
+	self assert: (output printStringBase: 16) equals: 'DEF96223'
 ]
 
 { #category : #tests }

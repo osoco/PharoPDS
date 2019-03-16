@@ -25,20 +25,26 @@ Murmur3 >> hash: aByteArray [
 		into: [ :calculatingHash :word | 
 			| tempHash |
 			tempHash := calculatingHash.
-			tempHash bitXor: word asInteger.
-			tempHash := ((ThirtyTwoBitRegister new load: tempHash)
-				leftRotateBy: 13) asInteger.
-			(tempHash * 5 + 16re6546b64) & 16rffffffff ].
+			tempHash := tempHash bitXor: word asInteger.
+			tempHash := self leftRotate: tempHash by: 13.
+			(self multiply: tempHash by: 5) + 16re6546b64 & 16rffffffff ].
 	remainingWord := self remainingWordFrom: aByteArray.
 	output := output bitXor: (self mixWord: remainingWord) asInteger.
 	"finalization mix - final avalanche"
 	output := output bitXor: aByteArray size.
 	output := output bitXor: output // (2 raisedTo: 16).
-	output := output * 16r85ebca6b & 16rffffffff.
+	output := self multiply: output  by: 16r85ebca6b.
 	output := output bitXor: output // (2 raisedTo: 13).
-	output := output * 16rc2b2ae35 & 16rffffffff.
+	output := self multiply: output by: 16rc2b2ae35.
 	output := output bitXor: output // (2 raisedTo: 16).
 	^ output
+]
+
+{ #category : #private }
+Murmur3 >> leftRotate: aWord by: shift [
+	| maskOfShiftBits |
+	maskOfShiftBits := (2 raisedTo: 32 - shift) - 1.
+	^ ((aWord & maskOfShiftBits) << shift) | (aWord >> (32 - shift))
 ]
 
 { #category : #private }
@@ -53,11 +59,16 @@ Murmur3 >> mixWord: aThirtyTwoBitsWord [
 	| c1 c2 mixedWord |
 	c1 := 16rcc9e2d51.
 	c2 := 16r1b873593.
-	mixedWord := ThirtyTwoBitRegister new
-		load: (aThirtyTwoBitsWord asInteger * c1) & 16rffffffff.
-	mixedWord leftRotateBy: 15.
-	mixedWord load: (mixedWord asInteger * c2) & 16rffffffff.
-	^ mixedWord
+	mixedWord := self multiply: aThirtyTwoBitsWord asInteger by: c1.
+	mixedWord := self leftRotate: mixedWord by: 13.
+	mixedWord := self multiply: mixedWord asInteger by: c2.
+	^ ThirtyTwoBitRegister new load: mixedWord
+]
+
+{ #category : #private }
+Murmur3 >> multiply: aWord by: anotherWord [
+	^ ((aWord & 16rFFFF) * anotherWord
+		+ (((aWord >> 16) * anotherWord & 16rFFFF) << 16)) & 16rFFFFFFFF
 ]
 
 { #category : #private }
