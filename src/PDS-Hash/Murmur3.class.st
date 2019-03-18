@@ -60,9 +60,8 @@ Murmur3 >> mixWord: aThirtyTwoBitsWord [
 	c1 := 16rcc9e2d51.
 	c2 := 16r1b873593.
 	mixedWord := self multiply: aThirtyTwoBitsWord asInteger by: c1.
-	mixedWord := self leftRotate: mixedWord by: 13.
-	mixedWord := self multiply: mixedWord asInteger by: c2.
-	^ ThirtyTwoBitRegister new load: mixedWord
+	mixedWord := self leftRotate: mixedWord by: 15.
+	^ self multiply: mixedWord asInteger by: c2
 ]
 
 { #category : #private }
@@ -110,10 +109,10 @@ Murmur3 >> thirtyTwoBitsWordsFrom: aByteArray [
 			index % 4 = 0
 				ifTrue: [ words
 						add:
-							(ThirtyTwoBitRegister new
-								byte1: (aByteArray at: index)
-								byte2: (aByteArray at: index - 1)
-								byte3: (aByteArray at: index - 2)
-								byte4: (aByteArray at: index - 3)) ] ].
+							(ByteArray
+								with: (aByteArray at: index)
+								with: (aByteArray at: index - 1)
+								with: (aByteArray at: index - 2)
+								with: (aByteArray at: index - 3)) ] ].
 	^ words
 ]
