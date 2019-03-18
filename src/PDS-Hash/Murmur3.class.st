@@ -14,37 +14,42 @@ Murmur3 class >> withSeed: anInteger [
 	   yourself
 ]
 
-{ #category : #hashing }
+{ #category : #private }
+Murmur3 >> finalAvalanche: hash withLength: length [
+	| value |
+	value := hash bitXor: length.
+	value := value bitXor: value >> 16.
+	value := BinaryOperations  multiply: value by: 16r85ebca6b.
+	value := value bitXor: value >> 13.
+	value := BinaryOperations  multiply: value by: 16rc2b2ae35.
+	value := value bitXor: value >> 16.
+	^ value
+]
+
+{ #category : #'public - hashing' }
 Murmur3 >> hash: aByteArray [
-	| output words mixedWords remainingWord |
+	| output words remainingWord |
 	output := seed.
 	words := self thirtyTwoBitsWordsFrom: aByteArray.
-	mixedWords := words collect: [ :eachWord | self mixWord: eachWord ].
-	output := mixedWords
+	output := words
 		inject: output
 		into: [ :calculatingHash :word | 
-			| tempHash |
-			tempHash := calculatingHash.
-			tempHash := tempHash bitXor: word asInteger.
-			tempHash := self leftRotate: tempHash by: 13.
-			(self multiply: tempHash by: 5) + 16re6546b64 & 16rffffffff ].
+			| mixedWord |
+			mixedWord := self mixWord: word.
+			self mixHash: calculatingHash withWord: mixedWord ].
 	remainingWord := self remainingWordFrom: aByteArray.
 	output := output bitXor: (self mixWord: remainingWord) asInteger.
-	"finalization mix - final avalanche"
-	output := output bitXor: aByteArray size.
-	output := output bitXor: output // (2 raisedTo: 16).
-	output := self multiply: output  by: 16r85ebca6b.
-	output := output bitXor: output // (2 raisedTo: 13).
-	output := self multiply: output by: 16rc2b2ae35.
-	output := output bitXor: output // (2 raisedTo: 16).
+	output := self finalAvalanche: output withLength: aByteArray size.
 	^ output
 ]
 
 { #category : #private }
-Murmur3 >> leftRotate: aWord by: shift [
-	| maskOfShiftBits |
-	maskOfShiftBits := (2 raisedTo: 32 - shift) - 1.
-	^ ((aWord & maskOfShiftBits) << shift) | (aWord >> (32 - shift))
+Murmur3 >> mixHash: calculatingHash withWord: mixedWord [
+	| tempHash |
+	tempHash := calculatingHash bitXor: mixedWord asInteger.
+	tempHash := tempHash <-<- 13.
+	^ (BinaryOperations multiply: tempHash by: 5) + 16re6546b64
+		& 16rffffffff
 ]
 
 { #category : #private }
@@ -59,15 +64,11 @@ Murmur3 >> mixWord: aThirtyTwoBitsWord [
 	| c1 c2 mixedWord |
 	c1 := 16rcc9e2d51.
 	c2 := 16r1b873593.
-	mixedWord := self multiply: aThirtyTwoBitsWord asInteger by: c1.
-	mixedWord := self leftRotate: mixedWord by: 15.
-	^ self multiply: mixedWord asInteger by: c2
-]
-
-{ #category : #private }
-Murmur3 >> multiply: aWord by: anotherWord [
-	^ ((aWord & 16rFFFF) * anotherWord
-		+ (((aWord >> 16) * anotherWord & 16rFFFF) << 16)) & 16rFFFFFFFF
+	mixedWord := BinaryOperations
+		multiply: aThirtyTwoBitsWord asInteger
+		by: c1.
+	mixedWord := mixedWord <-<- 15.
+	^ BinaryOperations multiply: mixedWord asInteger by: c2
 ]
 
 { #category : #private }
@@ -95,7 +96,7 @@ for (int shift = 0; i < len; i++, shift += 8) {
 	^ remainingWord
 ]
 
-{ #category : #setter }
+{ #category : #'public - accessing' }
 Murmur3 >> seed: anInteger [ 
 	seed := anInteger 
 ]
