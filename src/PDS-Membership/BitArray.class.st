@@ -34,7 +34,7 @@ BitArray >> setBitAt: index [
 	byteValue := storage byteAt: byteIndex.
 	storage
 		byteAt: byteIndex
-		put: (byteValue | 2 raisedTo: byteIndex * 8 - index)
+		put: (byteValue | (2 raisedTo: byteIndex * 8 - index))
 ]
 
 { #category : #'accessing - private' }

@@ -2,10 +2,11 @@ Class {
 	#name : #BloomFilter,
 	#superclass : #Object,
 	#instVars : [
-		'expectedElements',
-		'fpp',
 		'hashes',
-		'bitStorage'
+		'bitStorage',
+		'targetFpp',
+		'targetElements',
+		'size'
 	],
 	#category : #'PDS-Membership'
 }
@@ -13,8 +14,8 @@ Class {
 { #category : #'instance creation' }
 BloomFilter class >> new: expectedElements fpp: estimatedFalsePositiveProbability [
 	^ self new
-		expectedElements: expectedElements;
-		fpp: estimatedFalsePositiveProbability;
+		targetElements: expectedElements;
+		targetFpp: estimatedFalsePositiveProbability;
 		bitStorage:
 			(BitArray
 				new:
@@ -45,14 +46,15 @@ BloomFilter class >> optimumSizeFor: expectedElements andFpp: estimatedFalsePosi
 BloomFilter >> add: anObject [
 	| indexes |
 	indexes := self bitIndexes: anObject.
-	indexes do: [ :anIndex | bitStorage setBitAt: anIndex ]
+	indexes do: [ :anIndex | bitStorage setBitAt: anIndex ].
+	size := size +1.
 ]
 
 { #category : #adding }
 BloomFilter >> bitIndexes: anObject [
 	| hashValues indexes |
 	hashValues := self hashValuesFor: anObject.
-	indexes := hashValues collect: [ :hash | hash \\ self size ].
+	indexes := hashValues collect: [ :hash | hash \\ self storageSize  ].
 	^ indexes
 ]
 
@@ -69,24 +71,9 @@ BloomFilter >> contains: anObject [
 
 ]
 
-{ #category : #accessing }
-BloomFilter >> expectedElements [
-	^ expectedElements
-]
-
-{ #category : #'accessing - private' }
-BloomFilter >> expectedElements: anObject [
-	expectedElements := anObject
-]
-
-{ #category : #accessing }
+{ #category : #acccessing }
 BloomFilter >> fpp [
-	^ fpp
-]
-
-{ #category : #'accessing - private' }
-BloomFilter >> fpp: anObject [
-	fpp := anObject
+	^ ( 1 -  (-1 * self hashes * self size / self storageSize ) exp ) raisedTo: self hashes 
 ]
 
 { #category : #'member lookup' }
@@ -110,7 +97,37 @@ BloomFilter >> hashes: anObject [
 	hashes := anObject
 ]
 
+{ #category : #initialization }
+BloomFilter >> initialize [
+	size := 0.
+]
+
 { #category : #accessing }
 BloomFilter >> size [
+	^ size
+]
+
+{ #category : #accessing }
+BloomFilter >> storageSize [
 	^ bitStorage size
+]
+
+{ #category : #accessing }
+BloomFilter >> targetElements [
+	^ targetElements
+]
+
+{ #category : #'accessing - private' }
+BloomFilter >> targetElements: anObject [
+	targetElements := anObject
+]
+
+{ #category : #accessing }
+BloomFilter >> targetFpp [
+	^ targetFpp
+]
+
+{ #category : #'accessing - private' }
+BloomFilter >> targetFpp: anObject [
+	targetFpp := anObject
 ]

@@ -17,6 +17,16 @@ BloomFilterTests >> bloomSizeForElements: expectedElements fpp: estimatedFalsePo
 ]
 
 { #category : #tests }
+BloomFilterTests >> testFalsePositiveProbability [
+	| filter |
+	filter := BloomFilter new: 10 fpp: 0.1.
+	self assert: filter fpp equals: 0.
+	1 to: 6 do: [ :each | filter add: each asByteArray].
+	self assert: filter fpp equals: ( 1 - (-1 * filter hashes * 6 / filter storageSize) exp
+		raisedTo: filter hashes)
+]
+
+{ #category : #tests }
 BloomFilterTests >> testFilterCreation [
 	| filter |
 	filter := BloomFilter new: 100 fpp: 0.1.
@@ -28,7 +38,7 @@ BloomFilterTests >> testFilterInitialized [
 	| filter |
 	filter := BloomFilter new: 100 fpp: 0.1.
 	self
-		assert: filter size
+		assert: filter storageSize 
 		equals: ((self bloomSizeForElements: 100 fpp: 0.1) roundUpTo: 1).
 	self
 		assert: filter hashes
