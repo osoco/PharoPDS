@@ -43,10 +43,17 @@ BloomFilter class >> optimumSizeFor: expectedElements andFpp: estimatedFalsePosi
 
 { #category : #adding }
 BloomFilter >> add: anObject [
-	| hash index |
-	hash := self hash: anObject.
-	index := hash \\ self size.
-	bitStorage setBitAt: index
+	| indexes |
+	indexes := self bitIndexes: anObject.
+	indexes do: [ :anIndex | bitStorage setBitAt: anIndex ]
+]
+
+{ #category : #adding }
+BloomFilter >> bitIndexes: anObject [
+	| hashValues indexes |
+	hashValues := self hashValuesFor: anObject.
+	indexes := hashValues collect: [ :hash | hash \\ self size ].
+	^ indexes
 ]
 
 { #category : #'accessing - private' }
@@ -56,10 +63,10 @@ BloomFilter >> bitStorage: anObject [
 
 { #category : #'member lookup' }
 BloomFilter >> contains: anObject [
-	| hash index |
-	hash := self hash: anObject.
-	index := hash \\ self size.
-	^ (bitStorage bitAt: index) = 1
+	| indexes |
+	indexes := self bitIndexes: anObject .
+	^ indexes allSatisfy: [ :anIndex | (bitStorage bitAt: anIndex) = 1 ]
+
 ]
 
 { #category : #accessing }
@@ -83,8 +90,14 @@ BloomFilter >> fpp: anObject [
 ]
 
 { #category : #'member lookup' }
-BloomFilter >> hash: anObject [
-^ (Murmur3 withSeed: 0) hash: anObject.
+BloomFilter >> hashValuesFor: anObject [
+	| hashValues murmurHashOriginal h1 h2 |
+	
+	murmurHashOriginal := (Murmur3 withSeed: 0) hash: anObject.
+	h1 := murmurHashOriginal & 16rFFFF.
+	h2 := murmurHashOriginal >> 16.
+	hashValues := (1 to: self hashes) collect: [ :element | h1 + (element * h2) ].
+	^ hashValues
 ]
 
 { #category : #accessing }
