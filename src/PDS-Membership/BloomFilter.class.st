@@ -58,6 +58,11 @@ BloomFilter >> bitIndexes: anObject [
 	^ indexes
 ]
 
+{ #category : #accessing }
+BloomFilter >> bitStorage [
+	^ bitStorage
+]
+
 { #category : #'accessing - private' }
 BloomFilter >> bitStorage: anObject [
 	bitStorage := anObject

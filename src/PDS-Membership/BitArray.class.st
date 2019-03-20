@@ -19,7 +19,7 @@ BitArray class >> new: aNumberOfBits [
 { #category : #'member lookup' }
 BitArray >> bitAt: index [
 	| byteIndex byteValue mask |
-	byteIndex := index / 8 roundUpTo: 1.
+	byteIndex := (index / 8 )ceiling.
 	byteValue := storage byteAt: byteIndex.
 	mask := 2 raisedTo: byteIndex * 8 - index.
 	(byteValue & mask) = 0
@@ -45,6 +45,11 @@ BitArray >> size [
 { #category : #'accessing - private' }
 BitArray >> size: aNumberOfBits [
 size := aNumberOfBits 
+]
+
+{ #category : #accessing }
+BitArray >> storage [
+	^ storage
 ]
 
 { #category : #'accessing - private' }
