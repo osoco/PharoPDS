@@ -13,6 +13,8 @@ BinaryOperations class >> leftRotate: aWord by: shift [
 
 { #category : #private }
 BinaryOperations class >> multiply: aWord by: anotherWord [
-	^ ((aWord & 16rFFFF) * anotherWord
-		+ (((aWord >> 16) * anotherWord & 16rFFFF) << 16)) & 16rFFFFFFFF
+	^ (aWord & 16rFFFF) * anotherWord
+		+ (((aWord >> 16) * anotherWord & 16rFFFF) << 16) & 16rFFFFFFFF
+		
+	
 ]
