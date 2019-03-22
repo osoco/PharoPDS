@@ -19,9 +19,12 @@ Murmur3 >> finalAvalanche: hash withLength: length [
 	| value |
 	value := hash bitXor: length.
 	value := value bitXor: value >> 16.
-	value := BinaryOperations  multiply: value by: 16r85ebca6b.
+	value := BinaryOperations
+		multiply: value
+		by: 16r85ebca6b
+		wordLength: 32.
 	value := value bitXor: value >> 13.
-	value := BinaryOperations  multiply: value by: 16rc2b2ae35.
+	value := BinaryOperations multiply: value by: 16rc2b2ae35 wordLength: 32.
 	value := value bitXor: value >> 16.
 	^ value
 ]
@@ -47,9 +50,10 @@ Murmur3 >> hash128: aByteArray [
 
 { #category : #'public - hashing' }
 Murmur3 >> hash: aByteArray [
-	| output words remainingWord |
+	| output words remainingWord bytesOfHash |
+	bytesOfHash := 4.
 	output := seed.
-	words := self thirtyTwoBitsWordsFrom: aByteArray.
+	words := self wordsFrom: aByteArray ofLength: bytesOfHash.
 	output := words
 		inject: output
 		into: [ :calculatingHash :word | 
@@ -128,8 +132,11 @@ Murmur3 >> mixAndHashTwoWords: aPairWords withSeed: aSeed [
 Murmur3 >> mixHash: calculatingHash withWord: mixedWord [
 	| tempHash |
 	tempHash := calculatingHash bitXor: mixedWord asInteger.
-	tempHash := tempHash <-<- 13.
-	^ (BinaryOperations multiply: tempHash by: 5) + 16re6546b64
+	tempHash := BinaryOperations
+		leftRotate: tempHash
+		by: 13
+		wordLength: 32.
+	^ (BinaryOperations multiply: tempHash by: 5 wordLength: 32) + 16re6546b64
 		& 16rffffffff
 ]
 
@@ -147,9 +154,13 @@ Murmur3 >> mixWord: aThirtyTwoBitsWord [
 	c2 := 16r1b873593.
 	mixedWord := BinaryOperations
 		multiply: aThirtyTwoBitsWord asInteger
-		by: c1.
-	mixedWord := mixedWord <-<- 15.
-	^ BinaryOperations multiply: mixedWord asInteger by: c2
+		by: c1
+		wordLength: 32.
+	mixedWord := BinaryOperations
+		leftRotate: mixedWord
+		by: 15
+		wordLength: 32.
+	^ BinaryOperations multiply: mixedWord asInteger by: c2 wordLength: 32
 ]
 
 { #category : #private }
@@ -207,5 +218,23 @@ Murmur3 >> thirtyTwoBitsWordsFrom: aByteArray [
 								with: (aByteArray at: index - 1)
 								with: (aByteArray at: index - 2)
 								with: (aByteArray at: index - 3)) ] ].
+	^ words
+]
+
+{ #category : #private }
+Murmur3 >> wordsFrom: aByteArray ofLength: bytes [
+	| words newWord |
+	words := OrderedCollection new.
+	1 to: aByteArray size do: [ :index | 
+		index % bytes = 0
+			ifTrue: [ newWord := ByteArray new: bytes.
+				1 to: bytes do: [ :i | newWord at: i put: (aByteArray at: index - i + 1) ].
+				words add: newWord ] ].
+	"	aByteArray
+		doWithIndex: [ :e :index | 
+			index % bytes = 0
+				ifTrue: [ 1 to: index do: [ :i | 
+						newWord at: i put: (aByteArray at: index - i + 1).
+						words add: newWord ] ] ]."
 	^ words
 ]

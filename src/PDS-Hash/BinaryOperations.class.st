@@ -12,9 +12,25 @@ BinaryOperations class >> leftRotate: aWord by: shift [
 ]
 
 { #category : #private }
+BinaryOperations class >> leftRotate: aWord by: shift wordLength: wordBits [
+	| maskOfShiftBits |
+	maskOfShiftBits := (2 raisedTo: wordBits - shift) - 1.
+	^ (aWord & maskOfShiftBits) << shift | (aWord >> (wordBits  - shift))
+]
+
+{ #category : #private }
 BinaryOperations class >> multiply: aWord by: anotherWord [
 	^ (aWord & 16rFFFF) * anotherWord
 		+ (((aWord >> 16) * anotherWord & 16rFFFF) << 16) & 16rFFFFFFFF
 		
 	
+]
+
+{ #category : #private }
+BinaryOperations class >> multiply: aWord by: anotherWord wordLength: wordBits [
+	| maskOfShiftBits |
+	maskOfShiftBits := (2 raisedTo: wordBits) - 1.
+	^ (aWord & (maskOfShiftBits >> (wordBits / 2) )) * anotherWord
+		+ (((aWord >> 16) * anotherWord & (maskOfShiftBits >> (wordBits / 2) )) << 16)
+		& maskOfShiftBits
 ]
