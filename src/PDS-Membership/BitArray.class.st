@@ -3,7 +3,8 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'storage',
-		'size'
+		'size',
+		'occupancy'
 	],
 	#category : #'PDS-Membership'
 }
@@ -28,13 +29,38 @@ BitArray >> bitAt: index [
 ]
 
 { #category : #'accessing - private' }
-BitArray >> setBitAt: index [ 
-	| byteIndex byteValue |
-	byteIndex := index / 8 roundUpTo: 1.
+BitArray >> incOccupancy [
+	occupancy := occupancy + 1
+]
+
+{ #category : #'accessing - private' }
+BitArray >> initialize [
+	occupancy := 0
+]
+
+{ #category : #accessing }
+BitArray >> occupancy [
+	^ occupancy
+]
+
+{ #category : #accessing }
+BitArray >> occupancyInPercent [
+	^ (self occupancy * 100 / self size) asFloat
+]
+
+{ #category : #'accessing - private' }
+BitArray >> setBitAt: index [
+	| byteIndex byteValue bitChanged |
+	byteIndex := (index / 8) ceiling.
 	byteValue := storage byteAt: byteIndex.
-	storage
-		byteAt: byteIndex
-		put: (byteValue | (2 raisedTo: byteIndex * 8 - index))
+	bitChanged := (byteValue bitXor: (2 raisedTo: byteIndex * 8 - index))
+		> 0.
+	bitChanged
+		ifTrue: [ storage
+				byteAt: byteIndex
+				put: byteValue | (2 raisedTo: byteIndex * 8 - index).
+			self incOccupancy  ].
+	^ bitChanged
 ]
 
 { #category : #'accessing - private' }
