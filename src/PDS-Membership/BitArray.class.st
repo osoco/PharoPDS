@@ -29,6 +29,40 @@ BitArray >> bitAt: index [
 ]
 
 { #category : #'accessing - private' }
+BitArray >> gtInspectorBitSetIn: composite [
+	<gtInspectorPresentationOrder: 2>
+	| nodes |
+	^ composite roassal2
+		title: 'BitSet';
+		initializeView: [ | b |
+			nodes := (1 to: self size)
+				collect: [ :bitIndex | (self bitAt: bitIndex) = 1 ].
+			b := RTMondrian new.
+			b shape rectangle
+				size: 20;
+				if: [ :el | el ] color: Color blue trans;
+				if: [ :el | el not ] color: Color green trans.
+			b nodes: nodes.
+			b layout grid.
+			b build ];
+		yourself
+]
+
+{ #category : #'accessing - private' }
+BitArray >> gtInspectorParametersIn: composite [
+	<gtInspectorPresentationOrder: 1>
+	^ composite fastTable
+		title: 'Parameters';
+			display: [ {('Total bits' -> self size).
+			('Occupancy' -> self occupancy).
+			('Occupancy in percentage (%)' -> self occupancyInPercent)} ];
+		column: 'Name'
+			evaluated: [ :each | GTObjectPrinter asTruncatedTextFrom: each key ];
+		column: 'Value'
+			evaluated: [ :each | GTObjectPrinter asTruncatedTextFrom: each value ]
+]
+
+{ #category : #'accessing - private' }
 BitArray >> incOccupancy [
 	occupancy := occupancy + 1
 ]
@@ -45,7 +79,7 @@ BitArray >> occupancy [
 
 { #category : #accessing }
 BitArray >> occupancyInPercent [
-	^ (self occupancy * 100 / self size) asFloat
+	^ (self occupancy * 100 / self size) asFloat round: 2
 ]
 
 { #category : #'accessing - private' }
