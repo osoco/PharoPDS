@@ -54,7 +54,7 @@ BloomFilter >> add: anObject [
 BloomFilter >> bitIndexes: anObject [
 	| hashValues indexes |
 	hashValues := self hashValuesFor: anObject.
-	indexes := hashValues collect: [ :hash | hash \\ self storageSize  ].
+	indexes := hashValues collect: [ :hash | hash \\ self storageSize +1].
 	^ indexes
 ]
 
@@ -71,9 +71,28 @@ BloomFilter >> contains: anObject [
 
 ]
 
-{ #category : #acccessing }
+{ #category : #accessing }
 BloomFilter >> fpp [
 	^ ( 1 -  (-1 * self hashes * self size / self storageSize ) exp ) raisedTo: self hashes 
+]
+
+{ #category : #'gt-inspector-extension' }
+BloomFilter >> gtInspectorParametersIn: composite [
+	<gtInspectorPresentationOrder: 1>
+	^ composite fastTable
+		title: 'Parameters';
+		display: [ {('Target Elements' -> self targetElements).
+			('TargetFPP' -> self targetFpp).
+			('Number of hashes' -> self hashes).
+			('Storage total bits' -> self storageSize).
+			('Storage occupancy' -> bitStorage holdBits).
+
+			('Current Elements' -> self size).
+			('Current FPP' -> self fpp)} ];
+		column: 'Name'
+			evaluated: [ :each | GTObjectPrinter asTruncatedTextFrom: each key ];
+		column: 'Value'
+			evaluated: [ :each | GTObjectPrinter asTruncatedTextFrom: each value ]
 ]
 
 { #category : #'member lookup' }

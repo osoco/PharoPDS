@@ -11,10 +11,9 @@ Class {
 Murmur3Test >> testMurmur3WithOne128BitBlock [
 	| hasher output |
 	hasher := Murmur3 withSeed: 0.
-	output := hasher hash128: #(10 20 30 40 50 60 70 80 90 10 20 30 40 50 60 70).
-	self
-		assert: (output printStringBase: 16)
-		equals: '5457549051747178710'
+	output := hasher hash128: #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0).
+	self assert: (output at: 1) equals: '5457549051747178710'
+	"self assert: (output at: 2) equals: '-5447761339710104394'"
 ]
 
 { #category : #tests }

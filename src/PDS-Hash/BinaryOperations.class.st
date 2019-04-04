@@ -30,7 +30,7 @@ BinaryOperations class >> multiply: aWord by: anotherWord [
 BinaryOperations class >> multiply: aWord by: anotherWord wordLength: wordBits [
 	| maskOfShiftBits |
 	maskOfShiftBits := (2 raisedTo: wordBits) - 1.
-	^ (aWord & (maskOfShiftBits >> (wordBits / 2) )) * anotherWord
-		+ (((aWord >> 16) * anotherWord & (maskOfShiftBits >> (wordBits / 2) )) << 16)
+	^ (aWord asInteger & (maskOfShiftBits >> (wordBits / 2) )) * anotherWord
+		+ (((aWord asInteger >> 16) * anotherWord & (maskOfShiftBits >> (wordBits / 2) )) << 16)
 		& maskOfShiftBits
 ]

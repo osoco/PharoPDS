@@ -31,21 +31,33 @@ Murmur3 >> finalAvalanche: hash withLength: length [
 
 { #category : #'public - hashing' }
 Murmur3 >> hash128: aByteArray [
-	| h1 h2 output sixteenBytesWords remainingWord |
-	h1 := seed.
-	h2 := seed.
-	output := seed.
-	sixteenBytesWords := self hundredTwentyEightBitsWordsFrom: aByteArray.
+	| h1 h2 pairOfHashes sixteenBytesWords |
+	h1 := self seed.
+	h2 := self seed.
+	pairOfHashes := Array with: h1 with: h2.
+	sixteenBytesWords := self wordsFrom: aByteArray ofLength: 16.
 	sixteenBytesWords
 		doWithIndex: [ :aHundredTwentyEightBitsWord :index | 
-			self mixAndHashTwoWords: aHundredTwentyEightBitsWord withSeed: seed.
-			h1 := 16rFFFFFFFFFFFFFFFF.
-			h2 := 16rFFFFFFFFFFFFFFFF.
-			^ h1 h2
 			"
 			self mixAndHashTwoWords: pairWords withSeed: calculatingHash .
 			currentMixedWord := self mixWord: word.
-			self mixHash: calculatingHash withWord: mixedWord" ]
+			self mixHash: calculatingHash withWord: mixedWord"
+			pairOfHashes := self
+				mixAndHashTwoWords: aHundredTwentyEightBitsWord
+				withHashes: pairOfHashes ].
+	h1 := pairOfHashes at: 1.
+	h2 := pairOfHashes at: 2.
+	h1 := h1 bitXor: aByteArray size.
+	h2 := h2 bitXor: aByteArray size.
+	h1 := h1 + h2& 16rFFFFFFFFFFFFFFFF.
+	h2 := h2 + h1& 16rFFFFFFFFFFFFFFFF.
+	h1 := self mix64BitsWord: h1.
+	h2 := self mix64BitsWord: h2.
+	h1 := h1 + h2& 16rFFFFFFFFFFFFFFFF.
+	h2 := h2 + h1& 16rFFFFFFFFFFFFFFFF.
+	pairOfHashes at: 1 put: h1.
+	pairOfHashes at: 2 put: h2.
+	^ pairOfHashes
 ]
 
 { #category : #'public - hashing' }
@@ -67,18 +79,81 @@ Murmur3 >> hash: aByteArray [
 ]
 
 { #category : #private }
-Murmur3 >> hundredTwentyEightBitsWordsFrom: aByteArray [
-	| words |
-	words := OrderedCollection new.
-	aByteArray
-		doWithIndex: [ :e :index | 
-			index % 16 = 0
-				ifTrue: [ words add: (aByteArray asByteArray structAt: index - 15 length: 16) ] ].
-	^ words
+Murmur3 >> mix64BitsWord: aSixtyFourBitsWord [
+	| mixedWord |
+	mixedWord := aSixtyFourBitsWord.
+	mixedWord := mixedWord bitXor: mixedWord >> 33.
+	mixedWord := -1
+		*
+			(BinaryOperations
+				multiply: mixedWord
+				by: 16rFF51AFD7ED558CCD
+				wordLength: 64).
+	mixedWord := mixedWord bitXor: mixedWord >> 33.
+	mixedWord := BinaryOperations
+		multiply: mixedWord
+		by: 16rc4ceb9fe1a85ec53
+		wordLength: 64.
+	mixedWord := mixedWord bitXor: mixedWord >> 33.
+	^ mixedWord
+
+	"k ^= k >> 33;
+  k *= BIG_CONSTANT(0xff51afd7ed558ccd);
+  k ^= k >> 33;
+  k *= BIG_CONSTANT(0xc4ceb9fe1a85ec53);
+  k ^= k >> 33;"
 ]
 
 { #category : #private }
-Murmur3 >> mixAndHashTwoWords: aPairWords withSeed: aSeed [
+Murmur3 >> mixAndHashTwoWords: aPairWords withHashes: aPairOfHashes [
+	| c1 c2 currentMixedWord nextMixedWord h1 h2 m n1 n2 sixtyFourBitsWords |
+	c1 := 16r87c37b91114253d5.
+	c2 := 16r4cf5ad432745937f.
+	m := 5.
+	n1 := 16r52dce729.
+	n2 := 16r38495ab5.
+	sixtyFourBitsWords := self wordsFrom: aPairWords ofLength: 8.
+	currentMixedWord := sixtyFourBitsWords at: 1.
+	nextMixedWord := sixtyFourBitsWords at: 2.
+	h1 := aPairOfHashes at: 1.
+	h2 := aPairOfHashes at: 2.
+	currentMixedWord := BinaryOperations
+		multiply: currentMixedWord
+		by: c1
+		wordLength: 64.
+	currentMixedWord := BinaryOperations
+		leftRotate: currentMixedWord
+		by: 31
+		wordLength: 64.
+	currentMixedWord := BinaryOperations
+		multiply: currentMixedWord
+		by: c2
+		wordLength: 64.
+	h1 := h1 bitXor: currentMixedWord.
+	h1 := BinaryOperations leftRotate: h1 by: 27 wordLength: 64.
+	h1 := h1 + h2 & 16rFFFFFFFFFFFFFFFF.
+	h1 := (BinaryOperations multiply: h1 by: m wordLength: 64) + n1
+		& 16rFFFFFFFFFFFFFFFF.
+	nextMixedWord := BinaryOperations
+		multiply: nextMixedWord
+		by: c2
+		wordLength: 64.
+	nextMixedWord := BinaryOperations
+		leftRotate: nextMixedWord
+		by: 33
+		wordLength: 64.
+	nextMixedWord := BinaryOperations
+		multiply: nextMixedWord
+		by: c1
+		wordLength: 64.
+	h2 := h2 bitXor: nextMixedWord.
+	h2 := BinaryOperations leftRotate: h2 by: 31 wordLength: 64.
+	h2 := h2 + h1 & 16rFFFFFFFFFFFFFFFF.
+	h2 := (BinaryOperations multiply: h2 by: m wordLength: 64) + n2
+		& 16rFFFFFFFFFFFFFFFF.
+	aPairOfHashes at: 1 put: h1.
+	aPairOfHashes at: 2 put: h2.
+	^ aPairOfHashes
 	"for(int i = 0; i < nblocks; i++)
   {
     uint64_t k1 = getblock64(blocks,i*2+0);
@@ -92,40 +167,6 @@ Murmur3 >> mixAndHashTwoWords: aPairWords withSeed: aSeed [
 
     h2 = ROTL64(h2,31); h2 += h1; h2 = h2*5+0x38495ab5;
   }"
-
-	| c1 c2 currentMixedWord nextMixedWord h1 h2 m n1 n2 |
-	c1 := 16r87c37b91114253d5.
-	c2 := 16r4cf5ad432745937f.
-	m := 5.
-	n1 := 16r52dce729.
-	n2 := 16r38495ab5.
-	h1 := aSeed.
-	h2 := aSeed.
-	currentMixedWord := ((self sixtyFourBitsWordsFrom: aPairWords) at: 1).
-	nextMixedWord := ((self sixtyFourBitsWordsFrom: aPairWords) at: 2).
-	currentMixedWord := BinaryOperations
-		multiply: currentMixedWord asInteger
-		by: c1.
-	currentMixedWord := currentMixedWord <-<- 31.
-	currentMixedWord := BinaryOperations
-		multiply: currentMixedWord asInteger
-		by: c2.
-	h1 := h1 bitXor: currentMixedWord.
-	h1 := h1 <-<- 27.
-	h1 := h1 + h2.
-	h1 := (BinaryOperations multiply: h1 asInteger by: m) + n1.
-	nextMixedWord := BinaryOperations
-		multiply: nextMixedWord asInteger
-		by: c2.
-	nextMixedWord := nextMixedWord <-<- 33.
-	nextMixedWord := BinaryOperations
-		multiply: nextMixedWord asInteger
-		by: c1.
-	h2 := h2 bitXor: nextMixedWord.
-	h2 := h2 <-<- 31.
-	h2 := h2 + h1.
-	h2 := (BinaryOperations multiply: h2 asInteger by: m) + n2.
-	^ h1 h2
 ]
 
 { #category : #private }
@@ -189,36 +230,13 @@ for (int shift = 0; i < len; i++, shift += 8) {
 ]
 
 { #category : #'public - accessing' }
+Murmur3 >> seed [
+	^seed
+]
+
+{ #category : #'public - accessing' }
 Murmur3 >> seed: anInteger [ 
 	seed := anInteger 
-]
-
-{ #category : #private }
-Murmur3 >> sixtyFourBitsWordsFrom: aByteArray [
-	| words |
-	words := OrderedCollection new.
-	aByteArray
-		doWithIndex: [ :e :index | 
-			index %  8 = 0
-				ifTrue: [ words add: (aByteArray asByteArray structAt: index - 7 length: 8) ] ].
-	^ words
-]
-
-{ #category : #private }
-Murmur3 >> thirtyTwoBitsWordsFrom: aByteArray [
-	| words |
-	words := OrderedCollection new.
-	aByteArray
-		doWithIndex: [ :e :index | 
-			index % 4 = 0
-				ifTrue: [ words
-						add:
-							(ByteArray
-								with: (aByteArray at: index)
-								with: (aByteArray at: index - 1)
-								with: (aByteArray at: index - 2)
-								with: (aByteArray at: index - 3)) ] ].
-	^ words
 ]
 
 { #category : #private }
