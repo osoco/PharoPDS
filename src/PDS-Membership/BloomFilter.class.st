@@ -117,7 +117,7 @@ BloomFilter >> fppCurve [
 	
 	g legend right.
 	
-	g axisX title: '# Elements Added'.
+	g axisX title: 'Elements Added'.
 	g axisY title: 'False Positive Probability (FPP)'.
 	^ g
 ]
