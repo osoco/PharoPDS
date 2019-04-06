@@ -122,45 +122,6 @@ BloomFilter >> fppCurve [
 	^ g
 ]
 
-{ #category : #'gt-inspector-extension' }
-BloomFilter >> gtInspectorFPPCurveIn: composite [
-	<gtInspectorPresentationOrder: 2>
-	^ composite roassal2 
-		title: 'FPP Curve';
-		initializeView: [ self fppCurve ]
-]
-
-{ #category : #'gt-inspector-extension' }
-BloomFilter >> gtInspectorParametersIn: composite [
-	<gtInspectorPresentationOrder: 1>
-	^ composite fastTable
-		title: 'Parameters';
-		display: [ {('Target Elements (n)' -> self targetElements).
-			('Target FPP' -> self targetFpp).
-			('Number of hashes (k)' -> self hashes).
-			('Current Elements' -> self size).
-			('Current FPP' -> self fpp)} ];
-		column: 'Name'
-			evaluated: [ :each | GTObjectPrinter asTruncatedTextFrom: each key ];
-		column: 'Value'
-			evaluated: [ :each | GTObjectPrinter asTruncatedTextFrom: each value ]
-]
-
-{ #category : #'gt-inspector-extension' }
-BloomFilter >> gtInspectorStorageBitSetIn: composite [
-	<gtInspectorPresentationOrder: 4>
-	^ (bitStorage gtInspectorBitSetIn: composite)
-		title: 'Storage BitSet'
-]
-
-{ #category : #'gt-inspector-extension' }
-BloomFilter >> gtInspectorStorageParametersIn: composite [
-	<gtInspectorPresentationOrder: 3>
-	^ (bitStorage
-		gtInspectorParametersIn: composite)
-		title: 'Storage Parameters'
-]
-
 { #category : #'member lookup' }
 BloomFilter >> hashValuesFor: anObject [
 	| hashValues murmurHashOriginal h1 h2 |

@@ -1,8 +1,14 @@
 Class {
 	#name : #PDSBloomFilterAnalysis,
 	#superclass : #Object,
-	#category : #'PDS-Membership-Examples'
+	#category : #'PDS-Membership'
 }
+
+{ #category : #'instance creation' }
+PDSBloomFilterAnalysis class >> open [
+	<script: 'self open'>
+	self new analyzeFalsePositiveProbability inspectWithLabel: 'Bloom Filter False Positive Analysis'
+]
 
 { #category : #examples }
 PDSBloomFilterAnalysis >> analyzeFalsePositiveProbability [
