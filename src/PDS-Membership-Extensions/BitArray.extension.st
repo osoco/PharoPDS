@@ -1,6 +1,20 @@
 Extension { #name : #BitArray }
 
 { #category : #'*PDS-Membership-Extensions' }
+BitArray >> drawBitSetOn: aMondrian [
+	| nodes |
+	nodes := (1 to: self size)
+		collect: [ :bitIndex | (self bitAt: bitIndex) = 1 ].
+	aMondrian shape rectangle
+		size: 20;
+		if: [ :el | el ] color: Color blue trans;
+		if: [ :el | el not ] color: Color green trans.
+	aMondrian nodes: nodes.
+	aMondrian layout grid.
+	aMondrian build
+]
+
+{ #category : #'*PDS-Membership-Extensions' }
 BitArray >> gtBitSetViewFor: aView [
 	<gtView>
 	^ aView explicit
@@ -29,20 +43,12 @@ BitArray >> gtBitSetViewFor: aView [
 { #category : #'*PDS-Membership-Extensions' }
 BitArray >> gtInspectorBitSetIn: composite [
 	<gtInspectorPresentationOrder: 2>
-	| nodes |
 	^ composite roassal2
 		title: 'BitSet';
 		initializeView: [ | b |
-			nodes := (1 to: self size)
-				collect: [ :bitIndex | (self bitAt: bitIndex) = 1 ].
 			b := RTMondrian new.
-			b shape rectangle
-				size: 20;
-				if: [ :el | el ] color: Color blue trans;
-				if: [ :el | el not ] color: Color green trans.
-			b nodes: nodes.
-			b layout grid.
-			b build ];
+			self drawBitSetOn: b.
+			b ];
 		yourself
 ]
 

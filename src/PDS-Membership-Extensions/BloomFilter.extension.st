@@ -1,6 +1,34 @@
 Extension { #name : #BloomFilter }
 
 { #category : #'*PDS-Membership-Extensions' }
+BloomFilter >> drawBitSetOn: aMondrian [
+	bitStorage drawBitSetOn: aMondrian
+]
+
+{ #category : #'*PDS-Membership-Extensions' }
+BloomFilter >> gtFPPCurveFor: aView [
+    <gtView>
+    ^ aView explicit
+        title: 'FPP Curve';
+        priority: 20;
+        stencil: [ BlElement new
+                layout: BlLinearLayout vertical;
+                constraintsDo: [ :c | 
+                    c horizontal matchParent.
+                    c vertical matchParent ];
+                padding: (BlInsets all: 5);
+                addChild:
+                    (BrButton new
+                        look: BrGlamorousButtonWithLabelLook;
+                        label: 'Inspect in Morphic';
+                        action: [ GTInspector inspect: self fppCurve ];
+                        yourself);
+                addChild: self fppCurve build view setUpCanvas buildMorph imageForm asElement;
+                yourself ]
+
+]
+
+{ #category : #'*PDS-Membership-Extensions' }
 BloomFilter >> gtInspectorFPPCurveIn: composite [
 	<gtInspectorPresentationOrder: 2>
 	^ composite roassal2 
@@ -65,11 +93,11 @@ BloomFilter >> gtParametersViewFor: aView [
 { #category : #'*PDS-Membership-Extensions' }
 BloomFilter >> gtStorageBitSetViewFor: aView [
 	<gtView>
-	^ (bitStorage gtBitSetViewFor: aView) priority: 30; title: 'Storage BitSet'
+	^ (bitStorage gtBitSetViewFor: aView) priority: 40; title: 'Storage BitSet'
 ]
 
 { #category : #'*PDS-Membership-Extensions' }
 BloomFilter >> gtStorageParametersViewFor: aView [
 	<gtView>
-	^ (bitStorage gtParametersViewFor: aView) priority: 20; title: 'Storage Parameters'
+	^ (bitStorage gtParametersViewFor: aView) priority: 30; title: 'Storage Parameters'
 ]
