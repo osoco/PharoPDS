@@ -29,24 +29,42 @@ BloomFilterViewer >> bloom: aBloomFilter [
 	bits
 		roassalScript: [ :view :canvas | 
 			| b |
+			view @ RTDraggableView.
+			view canvas addMenu: 'In' callback: [ RTZoomInMove on: view ].
+			view canvas addMenu: 'Out' callback: [ RTZoomOutMove on: view ].
+			view canvas
+				addMenu: 'Center'
+				callback: [ view canvas focusOnCenterScaled.
+					view signalUpdate ].
 			b := RTMondrian new.
 			b view: view.
 			bloom drawBitSetOn: b.
-			canvas camera focusOnCenterScaled: 300 ];
+			canvas extent: (self extent x / 2) @ self extent y.
+			canvas focusOnCenterScaled.
+		 ];
 		refresh.
 	fpp
 		roassalScript: [ :view :canvas | 
 			| g |
+			view @ RTDraggableView.
+			view canvas addMenu: 'In' callback: [ RTZoomInMove on: view ].
+			view canvas addMenu: 'Out' callback: [ RTZoomOutMove on: view ].
+			view canvas
+				addMenu: 'Center'
+				callback: [ view canvas focusOnCenterScaled.
+					view signalUpdate ].
 			g := bloom fppCurve.
 			g view: view.
 			g build.
-			canvas camera focusOnCenterScaled: 300 ];
+			canvas extent: (self extent x / 2) @ self extent y.
+			 canvas focusOnCenterScaled.
+			 ];
 		refresh
 ]
 
 { #category : #api }
-BloomFilterViewer >> extent [ 
-^ 800@600
+BloomFilterViewer >> extent [
+	^ 1280 @ 600
 ]
 
 { #category : #accessing }

@@ -51,7 +51,7 @@ BloomFilterPlaygroundContent >> initializePresenter [
 			isContained := filter contains: element asByteArray.
 			isContained
 				ifTrue: [ element asString , ' maybe contained with FPP = '
-						, (filter fpp * 100 round: 5) asString, '%']
+						, ((filter fpp * 100) round: 5) asString , '%' ]
 				ifFalse: [ element asString , ' is not in the filter.' ] ]
 ]
 

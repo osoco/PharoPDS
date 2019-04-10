@@ -19,8 +19,7 @@ BloomFilterPlayground class >> defaultSpec [
 { #category : #'instance creation' }
 BloomFilterPlayground class >> open [
 	<script: 'self open'>
-	
-self new openWithSpec 
+ self new openWithSpec
 ]
 
 { #category : #accessing }
@@ -30,7 +29,7 @@ BloomFilterPlayground >> content [
 
 { #category : #initialization }
 BloomFilterPlayground >> extent [
-	^ 1024 @ 860
+	^ 1280 @ 800
 ]
 
 { #category : #initialization }
