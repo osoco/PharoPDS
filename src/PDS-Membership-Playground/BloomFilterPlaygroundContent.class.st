@@ -11,15 +11,14 @@ Class {
 
 { #category : #specs }
 BloomFilterPlaygroundContent class >> defaultSpec [
-	^ SpecLayout composed
+	^ SpecColumnLayout composed
 		newRow: [ :row | 
 			row
 				add: #addAction;
 				add: #testAction ]
-			origin: 0 @ 0
-			corner: 1 @ 0.4;
-		newRow: [ :row | row add: #viewer ] origin: 0 @ 0.4 corner: 1 @ 1;
-		yourself 
+			height: self labelHeight * 4 + self buttonHeight;
+		newRow: [ :row | row add: #viewer ];
+		yourself
 ]
 
 { #category : #accessing }
@@ -51,8 +50,9 @@ BloomFilterPlaygroundContent >> initializePresenter [
 			| isContained |
 			isContained := filter contains: element asByteArray.
 			isContained
-				ifTrue: [ element asString , ' maybe contained with FPP = ' , filter fpp asString ]
-				ifFalse: [ element asString , ' is not contained' ] ]
+				ifTrue: [ element asString , ' maybe contained with FPP = '
+						, (filter fpp * 100 round: 5) asString, '%']
+				ifFalse: [ element asString , ' is not in the filter.' ] ]
 ]
 
 { #category : #initialization }

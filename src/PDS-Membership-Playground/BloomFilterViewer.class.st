@@ -12,9 +12,10 @@ Class {
 { #category : #specs }
 BloomFilterViewer class >> defaultSpec [
 	^ SpecRowLayout composed
-	add: #bits;
-	add: #fpp;
-	yourself
+		add: #bits;
+		addSplitter;
+		add: #fpp;
+		yourself
 ]
 
 { #category : #accessing }
@@ -57,8 +58,9 @@ BloomFilterViewer >> fpp [
 BloomFilterViewer >> initializeWidgets [
 	bits := self instantiate: RoassalViewer.
 	fpp := self instantiate: RoassalViewer.
-	bits labelText: 'Bloom Filter BitSet'.
-	fpp labelText: 'False-Positive Probability Curve'.
+	bits
+		labelText: 'Bloom Filter BitSet'. fpp
+		labelText: 'False-Positive Probability Curve'.
 	bits roassalScript: [ :view :canvas |  ].
 	fpp roassalScript: [ :view :canvas |  ].
 	self focusOrder

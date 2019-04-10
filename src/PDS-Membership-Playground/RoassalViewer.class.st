@@ -12,9 +12,9 @@ Class {
 
 { #category : #specs }
 RoassalViewer class >> defaultSpec [
-	^ SpecLayout composed
-		newRow: [ :row | row add: #label ] origin: 0 @ 0 corner: 1 @ 0.1;
-		newRow: [ :row | row add: #visualization ] origin: 0 @ 0.1 corner: 1 @ 1;
+	^ SpecColumnLayout composed
+		newRow: [ :row | row add: #label ] height: self labelHeight;
+		newRow: [ :row | row add: #visualization ];
 		yourself
 ]
 
@@ -27,7 +27,9 @@ RoassalViewer >> extent [
 RoassalViewer >> initializeWidgets [
 	label := self newLabel.
 	visualization := self instantiate: RoassalModel.
-	label label: 'Roassal Visualization'.
+	label
+		label: 'Roassal Visualization';
+		emphasis:  #bold.
 	visualization script: [ :view :canvas |  ].
 	self focusOrder add: visualization
 ]

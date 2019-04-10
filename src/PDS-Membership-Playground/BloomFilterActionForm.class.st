@@ -16,16 +16,19 @@ Class {
 { #category : #specs }
 BloomFilterActionForm class >> defaultSpec [
 	^ SpecColumnLayout composed
-	add: #header;
-	add: #description;
-	add: #input;
-	add: #button;
-	add: #result
+		add: #header;
+		add: #description;
+		newRow: [ :row | 
+			row
+				add: #input;
+				add: #button width: self buttonWidth  ];
+		add: #result
 ]
 
 { #category : #api }
 BloomFilterActionForm >> bloom: anObject [
-	bloom := anObject
+	bloom := anObject.
+	 self resultLabel: ''
 ]
 
 { #category : #accessing }
@@ -65,7 +68,9 @@ BloomFilterActionForm >> header: aString [
 
 { #category : #initialization }
 BloomFilterActionForm >> initializePresenter [
-	button action: [ self performAction ]
+	button
+		action: [
+			self performAction ]
 ]
 
 { #category : #initialization }
@@ -75,11 +80,16 @@ BloomFilterActionForm >> initializeWidgets [
 	input := self newTextInput autoAccept: true.
 	button := self newButton.
 	result := self newLabel.
-	header label: 'Form Header'.
+	header
+		label: 'Form Header';
+		emphasis: #bold.
 	description label: 'Form description.'.
 	input ghostText: 'e.g. Value'.
+	input wantsVisualFeedback: false.
 	button label: 'Action'.
-	result label: 'Form result.'.
+	result
+		label: 'Form result.';
+		color: Color blue.
 	self focusOrder
 		add: input;
 		add: button
