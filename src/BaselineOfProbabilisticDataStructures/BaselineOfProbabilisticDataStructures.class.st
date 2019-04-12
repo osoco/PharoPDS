@@ -17,7 +17,7 @@ BaselineOfProbabilisticDataStructures >> baseline: spec [
 				with: [ spec repository: 'github://feenkcom/gtoolkit/src' ].
 			spec
 				package: 'PDS-Hash';
-				package: 'PDS-Hash-Test' with: [ spec requires: 'PDS-Hash' ];
+				package: 'PDS-Hash-Tests' with: [ spec requires: 'PDS-Hash' ];
 				package: 'PDS-Membership' with: [ spec requires: 'PDS-Hash' ];
 				package: 'PDS-Membership-Tests'
 					with: [ spec requires: 'PDS-Membership' ];
