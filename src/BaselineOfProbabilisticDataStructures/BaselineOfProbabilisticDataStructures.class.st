@@ -12,7 +12,7 @@ BaselineOfProbabilisticDataStructures >> baseline: spec [
 		do: [ spec
 				baseline: 'Roassal2'
 				with: [ spec repository: 'github://ObjectProfile/Roassal2/src' ].
-				spec
+			spec
 				baseline: 'GToolkit'
 				with: [ spec repository: 'github://feenkcom/gtoolkit/src' ].
 			spec
@@ -25,9 +25,12 @@ BaselineOfProbabilisticDataStructures >> baseline: spec [
 					with: [ spec requires: 'PDS-Membership' ];
 				package: 'PDS-Grapher-Decorators'
 					with: [ spec requires: 'Roassal2' ];
-				package: 'PDS-Membership-Extensions'
+				package: 'PDS-Membership-Inspector-Extensions'
 					with: [ spec
-						requires: #('PDS-Membership' 'PDS-Grapher-Decorators' 'Roassal2' 'GToolkit') ];
+						requires: #('PDS-Membership' 'PDS-Grapher-Decorators' 'Roassal2') ];
+				package: 'PDS-Membership-GToolkit-Extensions'
+					with: [ spec
+						requires: #('PDS-Membership' 'PDS-Membership-Inspector-Extensions' 'Roassal2' 'GToolkit') ];
 				package: 'PDS-Membership-Analysis'
 					with: [ spec requires: #('PDS-Membership' 'Roassal2') ];
 				package: 'PDS-Membership-Playground'
@@ -37,8 +40,11 @@ BaselineOfProbabilisticDataStructures >> baseline: spec [
 				group: 'Tests'
 				with: #('PDS-Membership-Tests' 'PDS-Hash-Tests').
 			spec
-				group: 'All'
+				group: 'Playground'
 				with:
-					#('PDS-Membership-Extensions' 'PDS-Membership-Analysis' 'PDS-Membership-Playground').
-			spec group: 'default' with: #('Tests') ]
+					#('PDS-Membership' 'PDS-Membership-Inspector-Extensions' 'PDS-Membership-Analysis' 'PDS-Membership-Playground').
+			spec
+				group: 'All'
+				with: #('Playground' 'PDS-Membership-GToolkit-Extensions').
+			spec group: 'default' with: #('Playground' 'Tests') ]
 ]
