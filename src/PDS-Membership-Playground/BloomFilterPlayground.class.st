@@ -1,12 +1,17 @@
 Class {
 	#name : #BloomFilterPlayground,
-	#superclass : #ComposablePresenter,
+	#superclass : #AlgorithmPlayground,
 	#instVars : [
 		'toolbar',
 		'content'
 	],
 	#category : #'PDS-Membership-Playground'
 }
+
+{ #category : #'as yet unclassified' }
+BloomFilterPlayground class >> algorithmName [
+ ^ 'Bloom Filter'
+]
 
 { #category : #specs }
 BloomFilterPlayground class >> defaultSpec [
@@ -44,6 +49,11 @@ BloomFilterPlayground >> initializeWidgets [
 	toolbar := self instantiate: BloomFilterPlaygroundToolbar.
 	content := self instantiate: BloomFilterPlaygroundContent.
 	self focusOrder add: toolbar; add: content
+]
+
+{ #category : #accessing }
+BloomFilterPlayground >> name [
+	^ 'Bloom Filter'
 ]
 
 { #category : #initialization }
