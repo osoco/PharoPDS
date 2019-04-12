@@ -1,7 +1,7 @@
 Class {
 	#name : #PDSBloomFilterAnalysis,
 	#superclass : #Object,
-	#category : #'PDS-Membership'
+	#category : #'PDS-Membership-Analysis'
 }
 
 { #category : #'instance creation' }
