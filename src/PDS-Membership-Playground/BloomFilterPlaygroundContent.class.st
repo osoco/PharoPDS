@@ -4,6 +4,7 @@ Class {
 	#instVars : [
 		'addAction',
 		'testAction',
+		'bloomInspector',
 		'viewer'
 	],
 	#category : #'PDS-Membership-Playground'
@@ -14,9 +15,12 @@ BloomFilterPlaygroundContent class >> defaultSpec [
 	^ SpecColumnLayout composed
 		newRow: [ :row | 
 			row
-				add: #addAction;
-				add: #testAction ]
-			height: self labelHeight * 4 + self buttonHeight;
+				newColumn: [ :column | 
+					column
+						add: #addAction;
+						add: #testAction ];
+				add: #bloomInspector ]
+			height: 2 * (self labelHeight * 4 + self buttonHeight);
 		newRow: [ :row | row add: #viewer ];
 		yourself
 ]
@@ -30,7 +34,17 @@ BloomFilterPlaygroundContent >> addAction [
 BloomFilterPlaygroundContent >> bloom: aBloom [
 	self addAction bloom: aBloom.
 	self testAction bloom: aBloom.
+	bloomInspector := GlamourPresentationPresenter new
+		presentationClass: GTInspector
+		startOn: aBloom.
 	self viewer bloom: aBloom.
+	self needRebuild: false.
+	self buildWithSpecLayout: self class defaultSpec
+]
+
+{ #category : #accessing }
+BloomFilterPlaygroundContent >> bloomInspector [
+	^ bloomInspector
 ]
 
 { #category : #initialization }
@@ -59,6 +73,7 @@ BloomFilterPlaygroundContent >> initializePresenter [
 BloomFilterPlaygroundContent >> initializeWidgets [
 	addAction := self instantiate: BloomFilterActionForm.
 	testAction := self instantiate: BloomFilterActionForm.
+	bloomInspector := self newLabel.
 	viewer := self instantiate: BloomFilterViewer.
 	addAction
 		header: 'Add elements to filter';
@@ -75,6 +90,7 @@ BloomFilterPlaygroundContent >> initializeWidgets [
 	self focusOrder
 		add: addAction;
 		add: testAction;
+		add: bloomInspector;
 		add: viewer
 ]
 
