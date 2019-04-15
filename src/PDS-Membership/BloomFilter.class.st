@@ -42,15 +42,18 @@ BloomFilter class >> optimumSizeFor: expectedElements andFpp: estimatedFalsePosi
 		/ (2 ln raisedTo: 2)
 ]
 
-{ #category : #adding }
+{ #category : #api }
 BloomFilter >> add: anObject [
-	| indexes |
+	| indexes anyBitChanged |
 	indexes := self bitIndexes: anObject.
-	indexes do: [ :anIndex | bitStorage setBitAt: anIndex ].
-	size := size +1.
+	anyBitChanged := false.
+	indexes
+		do:
+			[ :anIndex | anyBitChanged := anyBitChanged or: (bitStorage setBitAt: anIndex) ].
+	anyBitChanged ifTrue: [ size := size + 1 ]
 ]
 
-{ #category : #adding }
+{ #category : #private }
 BloomFilter >> bitIndexes: anObject [
 	| hashValues indexes |
 	hashValues := self hashValuesFor: anObject.
@@ -63,7 +66,7 @@ BloomFilter >> bitStorage: anObject [
 	bitStorage := anObject
 ]
 
-{ #category : #'member lookup' }
+{ #category : #api }
 BloomFilter >> contains: anObject [
 	| indexes |
 	indexes := self bitIndexes: anObject .
@@ -101,6 +104,11 @@ BloomFilter >> hashes: anObject [
 { #category : #initialization }
 BloomFilter >> initialize [
 	size := 0.
+]
+
+{ #category : #api }
+BloomFilter >> reset [
+	^ self class new: targetElements fpp: targetFpp
 ]
 
 { #category : #accessing }

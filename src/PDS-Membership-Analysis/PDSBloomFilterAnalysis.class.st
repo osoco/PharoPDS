@@ -1,13 +1,35 @@
 Class {
 	#name : #PDSBloomFilterAnalysis,
 	#superclass : #Object,
+	#instVars : [
+		'targetElements',
+		'targetFpp'
+	],
 	#category : #'PDS-Membership-Analysis'
 }
+
+{ #category : #'as yet unclassified' }
+PDSBloomFilterAnalysis class >> defaultTargetElements [
+	^ 100
+]
+
+{ #category : #'as yet unclassified' }
+PDSBloomFilterAnalysis class >> defaultTargetFpp [
+^ 0.01
+]
 
 { #category : #'instance creation' }
 PDSBloomFilterAnalysis class >> open [
 	<script: 'self open'>
-	self new analyzeFalsePositiveProbability inspectWithLabel: 'Bloom Filter False Positive Analysis'
+	self new analyzeFalsePositiveProbability
+		inspectWithLabel: 'Bloom Filter False Positive Analysis'
+]
+
+{ #category : #'instance creation' }
+PDSBloomFilterAnalysis class >> openFor: aBloomFilter [
+	(self new targetElements: aBloomFilter targetElements; targetFpp: aBloomFilter targetFpp;
+	 analyzeFalsePositiveProbability)
+		inspectWithLabel: 'Bloom Filter False Positive Analysis'
 ]
 
 { #category : #examples }
@@ -15,9 +37,10 @@ PDSBloomFilterAnalysis >> analyzeFalsePositiveProbability [
 	" 
     PDSBloomFilterAnalysis new analyzeFalsePositiveProbability
 	"
+
 	| fpp ds1 g p ds s ns targetElements dec bloom fp points targetFpp numberExperiments startingValue stepValue averagePoints averageDs |
-	targetElements := 100.
-	targetFpp := 0.03.
+	targetElements := self targetElements.
+	targetFpp := self targetFpp.
 	numberExperiments := 10.
 	startingValue := 10.
 	stepValue := 10.
@@ -93,4 +116,25 @@ PDSBloomFilterAnalysis >> analyzeFalsePositiveProbability [
 	g axisX title: '# Elements Added'.
 	g axisY title: 'False Positive Probability (FPP)'.
 	^ g
+]
+
+{ #category : #accessing }
+PDSBloomFilterAnalysis >> targetElements [
+	^ targetElements
+		ifNil: [ targetElements := self class defaultTargetElements ]
+]
+
+{ #category : #accessing }
+PDSBloomFilterAnalysis >> targetElements: anObject [
+	targetElements := anObject
+]
+
+{ #category : #accessing }
+PDSBloomFilterAnalysis >> targetFpp [
+	^ targetFpp ifNil: [ targetFpp := self class defaultTargetFpp ]
+]
+
+{ #category : #accessing }
+PDSBloomFilterAnalysis >> targetFpp: anObject [
+	targetFpp := anObject
 ]
