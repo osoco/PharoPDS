@@ -12,7 +12,8 @@ Class {
 { #category : #specs }
 PDSAlgorithmBrowser class >> defaultSpec [
 	^ SpecRowLayout composed
-		newColumn: [ :c | c add: #algorithms ] left: 0 right: 0.85;
+		newColumn: [ :c | c add: #algorithms ] width: 224;
+		addSplitter;
 		newColumn: [ :c | c add: #view ];
 		yourself
 ]
@@ -39,7 +40,7 @@ cm label: 'Select something from the list please.'.
 
 { #category : #api }
 PDSAlgorithmBrowser >> extent [
-	^ 1400 @ 800
+	^ 1024 @ 800
 ]
 
 { #category : #initialization }

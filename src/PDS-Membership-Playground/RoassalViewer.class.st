@@ -19,8 +19,8 @@ RoassalViewer class >> defaultSpec [
 ]
 
 { #category : #api }
-RoassalViewer >> extent [ 
-^ 600@400
+RoassalViewer >> extent [
+	^ 400 @ 400
 ]
 
 { #category : #initialization }

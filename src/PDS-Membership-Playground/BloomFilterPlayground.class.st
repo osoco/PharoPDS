@@ -34,7 +34,7 @@ BloomFilterPlayground >> content [
 
 { #category : #initialization }
 BloomFilterPlayground >> extent [
-	^ 1280 @ 800
+	^ 800 @ 800
 ]
 
 { #category : #initialization }

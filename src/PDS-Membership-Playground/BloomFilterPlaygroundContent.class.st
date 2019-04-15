@@ -76,15 +76,15 @@ BloomFilterPlaygroundContent >> initializeWidgets [
 	bloomInspector := self newLabel.
 	viewer := self instantiate: BloomFilterViewer.
 	addAction
-		header: 'Add elements to filter';
-		description: 'bla bla';
-		ghostText: 'Madrid';
+		header: 'Add elements';
+		description: 'Write the text you want to add to the filter.';
+		ghostText: 'e.g. Madrid';
 		buttonLabel: 'Add';
 		resultLabel: ''.
 	testAction
 		header: 'Membership test';
-		description: 'bla bla';
-		ghostText: 'Element to test membership. E.g. Barcelona';
+		description: 'Check if a given text is a member of the filter.';
+		ghostText: 'E.g. London';
 		buttonLabel: 'Test';
 		resultLabel: ''.
 	self focusOrder

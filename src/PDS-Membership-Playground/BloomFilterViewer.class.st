@@ -64,7 +64,7 @@ BloomFilterViewer >> bloom: aBloomFilter [
 
 { #category : #api }
 BloomFilterViewer >> extent [
-	^ 1280 @ 600
+	^ 800 @ 600
 ]
 
 { #category : #accessing }
