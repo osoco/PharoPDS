@@ -53,13 +53,12 @@ BitArray >> setBitAt: index [
 	| byteIndex byteValue bitChanged |
 	byteIndex := (index / 8) ceiling.
 	byteValue := storage byteAt: byteIndex.
-	bitChanged := (byteValue bitXor: (2 raisedTo: byteIndex * 8 - index))
-		> 0.
+	bitChanged := (byteValue bitAnd: (2 raisedTo: byteIndex * 8 - index)) == 0.
 	bitChanged
 		ifTrue: [ storage
 				byteAt: byteIndex
 				put: byteValue | (2 raisedTo: byteIndex * 8 - index).
-			self incOccupancy  ].
+			self incOccupancy ].
 	^ bitChanged
 ]
 

@@ -40,8 +40,8 @@ BloomFilterPlaygroundToolbar >> analyzeFilter [
 { #category : #initialization }
 BloomFilterPlaygroundToolbar >> benchmarkFilter [
 	| addOperationsPerSec testOperationsPerSec |
-	addOperationsPerSec := [ bloom add: 100 atRandom asByteArray ] bench.
-	testOperationsPerSec := [ bloom contains: 100 atRandom asByteArray ]
+	addOperationsPerSec := [ bloom add: bloom targetElements atRandom asByteArray ] bench.
+	testOperationsPerSec := [ bloom contains: bloom targetElements atRandom asByteArray ]
 		bench.
 	UIManager default
 		inform:
