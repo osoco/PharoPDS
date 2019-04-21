@@ -72,20 +72,21 @@ counters:= anArray .
 HiperLogLog >> estimatedElements [
 	| tempElements |
 	tempElements := self biasCorrection * multiSets * self harmonicMean.
+estimatedElements := tempElements .
 	tempElements <= (5 * multiSets / 2)
 		ifTrue: [ | temp |
-			
 			temp := counters
 				inject: 0
 				into: [ :sum :each | 
 					each = 0
-						ifTrue: [ sum + 1 ] ].
+						ifTrue: [ sum + 1 ]
+						ifFalse: [ sum ] ].
 			temp = 0
 				ifFalse: [ estimatedElements := multiSets * (multiSets / temp) log ] ]
 		ifFalse: [ tempElements > (2 ** 32 / 30)
 				ifTrue: [ estimatedElements := -1
 						* (2 ** 32 * (1 - (tempElements / (2 * 32)) log)) ] ].
-	^ estimatedElements
+	^ estimatedElements roundUpTo: 1
 ]
 
 { #category : #accessing }
@@ -96,9 +97,9 @@ HiperLogLog >> estimatedElements: anObject [
 { #category : #'private - computing' }
 HiperLogLog >> harmonicMean [
 	| total |
-	total := 0.
-	 counters
-		inject: total
+	total := 
+	counters
+		inject: 0
 		into: [ :sum :each | sum + (2 ** (-1 * each)) ].
 	^ multiSets * total
 ]
