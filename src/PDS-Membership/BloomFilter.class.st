@@ -84,7 +84,7 @@ BloomFilter >> fpp [
 BloomFilter >> hashValuesFor: anObject [
 	| hashValues murmurHashOriginal h1 h2 |
 	
-	murmurHashOriginal := (Murmur3 withSeed: 0) hash: anObject.
+	murmurHashOriginal := (NCHMurmur3 withSeed: 0) hash: anObject.
 	h1 := murmurHashOriginal & 16rFFFF.
 	h2 := murmurHashOriginal >> 16.
 	hashValues := (1 to: self hashes) collect: [ :element | h1 + (element * h2) ].

@@ -16,9 +16,10 @@ BaselineOfProbabilisticDataStructures >> baseline: spec [
 				baseline: 'GToolkit'
 				with: [ spec repository: 'github://feenkcom/gtoolkit/src' ].
 			spec
-				package: 'PDS-Hash';
-				package: 'PDS-Hash-Tests' with: [ spec requires: 'PDS-Hash' ];
-				package: 'PDS-Membership' with: [ spec requires: 'PDS-Hash' ];
+				baseline: 'NonCryptographicHashes'
+				with: [ spec repository: 'github://osoco/pharo-non-cryptographic-hashes/src' ].
+			spec
+				package: 'PDS-Membership' with: [ spec requires: 'NonCryptographicHashes' ];
 				package: 'PDS-Membership-Tests'
 					with: [ spec requires: 'PDS-Membership' ];
 				package: 'PDS-Membership-Examples'
@@ -30,7 +31,8 @@ BaselineOfProbabilisticDataStructures >> baseline: spec [
 						requires: #('PDS-Membership' 'PDS-Grapher-Decorators' 'Roassal2') ];
 				package: 'PDS-Membership-GToolkit-Extensions'
 					with: [ spec
-						requires: #('PDS-Membership' 'PDS-Membership-Inspector-Extensions' 'Roassal2' 'GToolkit') ];
+						requires:
+							#('PDS-Membership' 'PDS-Membership-Inspector-Extensions' 'Roassal2' 'GToolkit') ];
 				package: 'PDS-Membership-Analysis'
 					with: [ spec requires: #('PDS-Membership' 'Roassal2') ];
 				package: 'PDS-Membership-Playground'
@@ -38,7 +40,7 @@ BaselineOfProbabilisticDataStructures >> baseline: spec [
 			spec group: 'Core' with: #('PDS-Membership').
 			spec
 				group: 'Tests'
-				with: #('PDS-Membership-Tests' 'PDS-Hash-Tests').
+				with: #('PDS-Membership-Tests').
 			spec
 				group: 'Playground'
 				with:
