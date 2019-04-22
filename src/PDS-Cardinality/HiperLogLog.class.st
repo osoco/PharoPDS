@@ -28,7 +28,7 @@ HiperLogLog class >> newWithStandarError: aStandarError [
 	"Create a empty HLL with Standar Error between 26% and 0,41%"
 
 	| newHLL |
-	newHLL := HiperLogLog new.
+	newHLL := self new.
 	newHLL
 		targetStandarError: aStandarError;
 		mmh: (Murmur3 withSeed: 0);
@@ -36,7 +36,7 @@ HiperLogLog class >> newWithStandarError: aStandarError [
 		restBits: 32 - newHLL indexBits;
 		multiSets: 2 ** newHLL indexBits;
 		counters: (Array new: newHLL multiSets withAll: 0);
-	   estimatedElements: 0.
+		estimatedElements: 0.
 	"		multiSets: (self calculateMultiSets: aStandarError);"
 	^ newHLL
 ]
@@ -97,11 +97,10 @@ HiperLogLog >> estimatedElements: anObject [
 { #category : #'private - computing' }
 HiperLogLog >> harmonicMean [
 	| total |
-	total := 
-	counters
+	total := counters
 		inject: 0
 		into: [ :sum :each | sum + (2 ** (-1 * each)) ].
-	^ multiSets * total
+	^ multiSets / total
 ]
 
 { #category : #accessing }
@@ -131,11 +130,10 @@ HiperLogLog >> multiSets: anObject [
 
 { #category : #adding }
 HiperLogLog >> rank: anInteger [
-
-
 	1 to: restBits do: [ :i | 
 		(anInteger bitAt: i) = 1
-			ifTrue: [ ^ i - 1 ] ]
+			ifTrue: [ ^ i ] ].
+	^ restBits+1
 ]
 
 { #category : #accessing }
