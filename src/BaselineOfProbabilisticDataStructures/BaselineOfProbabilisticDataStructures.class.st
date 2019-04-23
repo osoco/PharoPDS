@@ -9,7 +9,53 @@ BaselineOfProbabilisticDataStructures >> baseline: spec [
 	<baseline>
 	spec
 		for: #common
-		do: [ spec
+		do: [ 
+			self specProjects: spec.
+			self specPackages: spec.
+			self specGroups: spec 
+		]
+]
+
+{ #category : #'as yet unclassified' }
+BaselineOfProbabilisticDataStructures >> specGroups: spec [
+	spec group: 'Core' with: #('PDS-Core').
+	spec group: 'Tests' with: #('PDS-Core-Tests').
+	spec group: 'Examples' with: #('PDS-Core' 'PDS-Membership-Examples').
+	spec
+		group: 'Playground'
+		with: #('PDS-Core' 'PDS-Inspector-Extensions' 'PDS-Playground').
+	spec
+		group: 'All'
+		with:
+			#('Playground' 'Tests' 'Examples' 'PDS-Membership-GToolkit-Extensions').
+	spec group: 'default' with: #('Playground' 'Tests' 'Examples')
+]
+
+{ #category : #'as yet unclassified' }
+BaselineOfProbabilisticDataStructures >> specPackages: spec [
+	spec
+		package: 'PDS-Core'
+			with: [ spec requires: 'NonCryptographicHashes' ];
+		package: 'PDS-Core-Tests'
+			with: [ spec requires: 'PDS-Core' ];
+		package: 'PDS-Membership-Examples'
+			with: [ spec requires: 'PDS-Core' ];
+		package: 'PDS-Grapher'
+			with: [ spec requires: 'Roassal2' ];
+		package: 'PDS-Inspector-Extensions'
+			with: [ spec
+				requires: #('PDS-Core' 'PDS-Grapher' 'Roassal2') ];
+		package: 'PDS-Membership-GToolkit-Extensions'
+			with: [ spec
+				requires:
+					#('PDS-Core' 'PDS-Inspector-Extensions' 'Roassal2' 'GToolkit') ];
+		package: 'PDS-Playground'
+			with: [ spec requires: 'PDS-Core' ]
+]
+
+{ #category : #'as yet unclassified' }
+BaselineOfProbabilisticDataStructures >> specProjects: spec [
+spec
 				baseline: 'Roassal2'
 				with: [ spec repository: 'github://ObjectProfile/Roassal2/src' ].
 			spec
@@ -17,36 +63,6 @@ BaselineOfProbabilisticDataStructures >> baseline: spec [
 				with: [ spec repository: 'github://feenkcom/gtoolkit/src' ].
 			spec
 				baseline: 'NonCryptographicHashes'
-				with: [ spec repository: 'github://osoco/pharo-non-cryptographic-hashes/src' ].
-			spec
-				package: 'PDS-Membership' with: [ spec requires: 'NonCryptographicHashes' ];
-				package: 'PDS-Membership-Tests'
-					with: [ spec requires: 'PDS-Membership' ];
-				package: 'PDS-Membership-Examples'
-					with: [ spec requires: 'PDS-Membership' ];
-				package: 'PDS-Grapher-Decorators'
-					with: [ spec requires: 'Roassal2' ];
-				package: 'PDS-Membership-Inspector-Extensions'
-					with: [ spec
-						requires: #('PDS-Membership' 'PDS-Grapher-Decorators' 'Roassal2') ];
-				package: 'PDS-Membership-GToolkit-Extensions'
-					with: [ spec
-						requires:
-							#('PDS-Membership' 'PDS-Membership-Inspector-Extensions' 'Roassal2' 'GToolkit') ];
-				package: 'PDS-Membership-Analysis'
-					with: [ spec requires: #('PDS-Membership' 'Roassal2') ];
-				package: 'PDS-Membership-Playground'
-					with: [ spec requires: 'PDS-Membership' ].
-			spec group: 'Core' with: #('PDS-Membership').
-			spec
-				group: 'Tests'
-				with: #('PDS-Membership-Tests').
-			spec
-				group: 'Playground'
 				with:
-					#('PDS-Membership' 'PDS-Membership-Inspector-Extensions' 'PDS-Membership-Analysis' 'PDS-Membership-Playground').
-			spec
-				group: 'All'
-				with: #('Playground' 'PDS-Membership-GToolkit-Extensions').
-			spec group: 'default' with: #('Playground' 'Tests') ]
+					[ spec repository: 'github://osoco/pharo-non-cryptographic-hashes/src' ].
 ]
