@@ -20,10 +20,10 @@ BaselineOfProbabilisticDataStructures >> baseline: spec [
 BaselineOfProbabilisticDataStructures >> specGroups: spec [
 	spec group: 'Core' with: #('PDS-Core').
 	spec group: 'Tests' with: #('PDS-Core-Tests').
-	spec group: 'Examples' with: #('PDS-Core' 'PDS-Membership-Examples').
+	spec group: 'Examples' with: #('PDS-Core-Examples').
 	spec
 		group: 'Playground'
-		with: #('PDS-Core' 'PDS-Membership-Inspector-Extensions' 'PDS-Playground').
+		with: #('PDS-Playground' 'PDS-Inspector-Extensions' ).
 	spec
 		group: 'All'
 		with:
@@ -37,14 +37,15 @@ BaselineOfProbabilisticDataStructures >> specPackages: spec [
 		package: 'PDS-Core'
 			with: [ spec requires: 'NonCryptographicHashes' ];
 		package: 'PDS-Core-Tests' with: [ spec requires: 'PDS-Core' ];
-		package: 'PDS-Membership-Examples'
+		package: 'PDS-Core-Examples'
 			with: [ spec requires: 'PDS-Core' ];
 		package: 'PDS-Grapher' with: [ spec requires: 'Roassal2' ];
-		package: 'PDS-Membership-Inspector-Extensions'
+		package: 'PDS-Inspector-Extensions'
 			with: [ spec requires: #('PDS-Core' 'PDS-Grapher' 'Roassal2') ];
 		package: 'PDS-Membership-GToolkit-Extensions'
 			with: [ spec
-				requires: #('PDS-Core' 'PDS-Inspector-Extensions' 'Roassal2' 'GToolkit') ];
+				requires:
+					#('PDS-Core' 'PDS-Inspector-Extensions' 'Roassal2' 'GToolkit') ];
 		package: 'PDS-Playground' with: [ spec requires: 'PDS-Core' ]
 ]
 
