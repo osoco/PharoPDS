@@ -6,7 +6,7 @@ Class {
 		'size',
 		'occupancy'
 	],
-	#category : #'PDS-Inspector-Extensions-Collections'
+	#category : #'PDS-Core-Collections'
 }
 
 { #category : #'instance creation' }

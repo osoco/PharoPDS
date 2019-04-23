@@ -8,7 +8,7 @@ Class {
 		'targetElements',
 		'size'
 	],
-	#category : #'PDS-Inspector-Extensions-Membership'
+	#category : #'PDS-Core-Membership'
 }
 
 { #category : #'instance creation' }
