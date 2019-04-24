@@ -85,7 +85,7 @@ HiperLogLog >> estimatedElements [
 						ifTrue: [ sum + 1 ]
 						ifFalse: [ sum ] ].
 			temp = 0
-				ifFalse: [ estimatedElements := multiSets * (multiSets / temp) log ] ]
+				ifFalse: [ estimatedElements := multiSets * (multiSets / temp) ln ] ]
 		ifFalse: [ tempElements > (2 ** 32 / 30)
 				ifTrue: [ estimatedElements := -1
 						* (2 ** 32 * (1 - (tempElements / (2 * 32)) log)) ] ].
