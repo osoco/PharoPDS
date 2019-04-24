@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'targetStandarError',
 		'counters',
-		'mmh',
+		'hash',
 		'multiSets',
 		'indexBits',
 		'restBits',
@@ -23,28 +23,36 @@ HiperLogLog class >> calculateMultiSets: anError [
 	^ (1.04 / (anError / 100)) ** 2
 ]
 
+{ #category : #'as yet unclassified' }
+HiperLogLog class >> defaultHash [
+^Murmur3 withSeed: 0
+	
+]
+
 { #category : #'instance creation' }
 HiperLogLog class >> newWithStandarError: aStandarError [
 	"Create a empty HLL with Standar Error between 26% and 0,41%"
 
+	^ self
+		newWithStandarError: aStandarError
+		andHash: self defaultHash
+]
+
+{ #category : #'instance creation' }
+HiperLogLog class >> newWithStandarError: aStandarError andHash: aHash [
+
+	"Create a empty HLL with Standar Error between 26% and 0,41%"
+
 	| newHLL |
 	newHLL := self new.
-	newHLL
-		targetStandarError: aStandarError;
-		mmh: (Murmur3 withSeed: 0);
-		indexBits: (self calculateIndexBits: aStandarError);
-		restBits: 32 - newHLL indexBits;
-		multiSets: 2 ** newHLL indexBits;
-		counters: (Array new: newHLL multiSets withAll: 0);
-		estimatedElements: 0.
-	"		multiSets: (self calculateMultiSets: aStandarError);"
+	newHLL setStandarError: aStandarError withHash:  aHash.
 	^ newHLL
 ]
 
 { #category : #api }
 HiperLogLog >> add: anObject [
 	| tempHash tempCounterPosition tempRank |
-	tempHash := mmh hash: anObject.
+	tempHash := hash hash: anObject.
 	tempCounterPosition := (tempHash & (2 ** indexBits - 1)) + 1.
 	tempRank := self rank: tempHash >> indexBits.
 	tempRank > (counters at: tempCounterPosition)
@@ -63,16 +71,11 @@ HiperLogLog >> biasCorrection [
 		ifTrue: [ ^ 0.673 ]
 ]
 
-{ #category : #'accessing - private' }
-HiperLogLog >> counters: anArray [
-counters:= anArray .
-]
-
 { #category : #accessing }
 HiperLogLog >> estimatedElements [
 	| tempElements |
 	tempElements := self biasCorrection * multiSets * self harmonicMean.
-estimatedElements := tempElements .
+	estimatedElements := tempElements.
 	tempElements <= (5 * multiSets / 2)
 		ifTrue: [ | temp |
 			temp := counters
@@ -86,12 +89,7 @@ estimatedElements := tempElements .
 		ifFalse: [ tempElements > (2 ** 32 / 30)
 				ifTrue: [ estimatedElements := -1
 						* (2 ** 32 * (1 - (tempElements / (2 * 32)) log)) ] ].
-	^ estimatedElements roundUpTo: 1
-]
-
-{ #category : #accessing }
-HiperLogLog >> estimatedElements: anObject [
-	estimatedElements := anObject
+	^ estimatedElements := estimatedElements roundUpTo: 1
 ]
 
 { #category : #'private - computing' }
@@ -103,31 +101,6 @@ HiperLogLog >> harmonicMean [
 	^ multiSets / total
 ]
 
-{ #category : #accessing }
-HiperLogLog >> indexBits [
-	^ indexBits
-]
-
-{ #category : #accessing }
-HiperLogLog >> indexBits: anObject [
-	indexBits := anObject
-]
-
-{ #category : #'accessing - private' }
-HiperLogLog >> mmh: aMurmurhash [
-mmh := aMurmurhash .
-]
-
-{ #category : #accessing }
-HiperLogLog >> multiSets [
-	^ multiSets
-]
-
-{ #category : #accessing }
-HiperLogLog >> multiSets: anObject [
-	multiSets := anObject
-]
-
 { #category : #adding }
 HiperLogLog >> rank: anInteger [
 	1 to: restBits do: [ :i | 
@@ -136,17 +109,15 @@ HiperLogLog >> rank: anInteger [
 	^ restBits+1
 ]
 
-{ #category : #accessing }
-HiperLogLog >> restBits [
-	^ restBits
-]
+{ #category : #initialization }
+HiperLogLog >> setStandarError: aStandarError withHash: aHash [
+	"Initialize the whole HLL variables from a Standar Error"
 
-{ #category : #accessing }
-HiperLogLog >> restBits: anObject [
-	restBits := anObject
-]
-
-{ #category : #accessing }
-HiperLogLog >> targetStandarError: anObject [
-	targetStandarError := anObject
+	targetStandarError := aStandarError.
+	hash := aHash.
+	indexBits := self class calculateIndexBits: aStandarError.
+	restBits := 32 - indexBits.
+	multiSets := 2 ** indexBits.
+	counters := Array new: multiSets withAll: 0.
+	estimatedElements := 0
 ]
