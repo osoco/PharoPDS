@@ -14,7 +14,13 @@ PDSWorldMenu class >> bloomFilterTutorialMenuOn: aBuilder [
 		selector: #openBloomFilterTutorial;
 		order: 2;
 		help: 'Open Bloom Filter interactive tutorial';
+		icon: self tutorialIcon;
 		withSeparatorAfter
+]
+
+{ #category : #icons }
+PDSWorldMenu class >> browserIcon [
+	^ PDSIcons flaskIcon scaledToSize: 24 @ 24
 ]
 
 { #category : #'world menu' }
@@ -27,7 +33,7 @@ PDSWorldMenu class >> browserMenuOn: aBuilder [
 		selector: #openBrowser;
 		order: 10;
 		help: 'Open the PDS Algorithms Browser';
-		icon: (Smalltalk ui icons iconNamed: #glamorousGo)
+		icon: self browserIcon
 ]
 
 { #category : #'world menu' }
@@ -39,7 +45,8 @@ PDSWorldMenu class >> documentationMenuOn: aBuilder [
 		target: self;
 		selector: #openPDSDocumentation;
 		order: 1;
-		help: 'Open PDS Documentation'
+		help: 'Open PDS Documentation';
+		icon: self tutorialIcon
 ]
 
 { #category : #'api - actions' }
@@ -59,12 +66,8 @@ PDSWorldMenu class >> openPDSDocumentation [
 ]
 
 { #category : #icons }
-PDSWorldMenu class >> pdsIcon [
-^ (Form
-	extent: (16@16)
-	depth: 32
-	fromArray: #( 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 111848106 2425590675 4019360402 4019360402 2425590675 111848106 0 0 0 0 0 0 0 0 0 0 2425590675 4287795858 4287795858 4287795858 4287795858 2425590675 0 0 0 0 0 0 0 0 0 0 4019360402 4287795858 4287795858 4287795858 4287795858 4019360402 0 0 0 0 0 0 0 0 0 0 4019360402 4287795858 4287795858 4287795858 4287795858 4019360402 0 0 0 0 0 0 0 0 0 0 2425590675 4287795858 4287795858 4287795858 4287795858 2425590675 0 0 0 0 0 0 0 0 0 0 111848106 2425590675 4019360402 4019360402 2425590675 111848106 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
-	offset: (0@0))
+PDSWorldMenu class >> pds [
+	^ PDSIcons rocketIcon scaledToSize: 24@24
 ]
 
 { #category : #'world menu' }
@@ -72,6 +75,11 @@ PDSWorldMenu class >> rootMenuOn: aBuilder [
 	<worldMenu>
 	(aBuilder item: #pdsMenu)
 		label: 'P11c Data Structures';
-		icon: (Smalltalk ui icons iconNamed: #smallObjects);
+		icon: self pds ;
 		order: 100
+]
+
+{ #category : #icons }
+PDSWorldMenu class >> tutorialIcon [
+	^ PDSIcons mortarboardIcon scaledToSize: 24 @ 24
 ]
