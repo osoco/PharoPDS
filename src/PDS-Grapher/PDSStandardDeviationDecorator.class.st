@@ -43,14 +43,14 @@ PDSStandardDeviationDecorator >> render [
 	svg := TRSVGPath new.
 	svg color: color.
 	k := builder getPixelPositionOf: pointsByAbscissa keys first @ dev first.
-	str := 'M' , k x asString , ' ' , k y asString.
+	str := 'M' , k x asFloat asString , ' ' , k y asString.
 	(2 to: dev size)
 		do: [ :i | 
 			| x y |
 			x := pointsByAbscissa keys at: i.
 			y := dev at: i.
 			k := builder getPixelPositionOf: x @ y.
-			str := str , 'L' , k x asString , ' ' , k y asString ].
+			str := str , 'L' , k x asFloat asString , ' ' , k y asString ].
 	dev := dev := (pointsByAbscissa
 		collect: [ :data | (data collect: #y) average - (data collect: #y) stdev ]) values.
 	(1 to: dev size)
@@ -60,7 +60,7 @@ PDSStandardDeviationDecorator >> render [
 			x := pointsByAbscissa keys at: index.
 			y := dev at: index.
 			k := builder getPixelPositionOf: x @ y.
-			str := str , 'L' , k x asString , ' ' , k y asString ].
+			str := str , 'L' , k x asFloat asString , ' ' , k y asString ].
 	str := str , 'Z'.
 	svg path: str.
 	builder view canvas addShape: svg
