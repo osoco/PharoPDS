@@ -1,8 +1,65 @@
+"
+!PharoPDS
+
+The purpose of PharoPDS is to provide some """"probabilistic data structures and algorithms"""" implemented in Pharo.
+
+''Probabilistic data structures'' is a common name for data structures based mostly on different hashing techniques. Unlike regular and deterministic data strcutures, they always provide approximated answers but with reliable ways to estimate possible errors.
+
+Fortunately, the potential losses and errors are fully compensated for by extremely low memory requirements, constant query time, and scaling. All these factors make these structures relevant in ''Big Data'' applications.
+
+!!Data Structures
+
+Currently, PharoPDS provides  probabilistic data structures for the following problem categories:
+
+!!! Membership
+
+A 'membership problem' for a dataset is a task to decide whether some element belongs to the dataset or not.
+
+The data structures provided to solve the membership problem are:
+
+ - """"Bloom Filter"""": Learn more about it in ${class:PDSBloomFilter}$
+
+!!! Cardinality
+
+This is still a work in progress.
+
+ - """"HyperLogLog""""
+
+!!Algorithms Browser
+
+Try the PharoPDS Algorithms Browser:
+[[[ 
+PDSAlgorithmsBrowser open 
+]]]
+
+!!License
+
+PharoPDS software is free and open source under an """"MIT license"""".
+
+!!Project dependencies
+
+Hashing plays a central role in probabilistic data structures. Indeed, the choice of the appropiate hash functions is crucial to avoid bias and to reach a good performance. In particular, the structures require """"non-cryptographic hash functions"""" that are provided by the dependency module ==NonCryptographicHashes==. Learn more at ${class:BaselineOfNonCryptographicHashes}$.
+
+Other dependencies like ==Roassal== or ==GToolkit== are optional for production use. Nevertheless, we recommend that you install them in the development image to get some useful tools like Inspector custom extensions, the algorithm browser or interactive tutorials.
+
+The picture below depicts the project modules and their dependencies. The map is navigable. Click on each component to learn more about it.
+
+${example:BaselineOfProbabilisticDataStructures class>>#itself|previewShow=#gtMapFor:||noCode=|previewHeight=400}$
+
+
+
+"
 Class {
 	#name : #BaselineOfProbabilisticDataStructures,
 	#superclass : #BaselineOf,
 	#category : #BaselineOfProbabilisticDataStructures
 }
+
+{ #category : #accessing }
+BaselineOfProbabilisticDataStructures class >> itself [
+	<gtExample>
+	^ self
+]
 
 { #category : #baselines }
 BaselineOfProbabilisticDataStructures >> baseline: spec [

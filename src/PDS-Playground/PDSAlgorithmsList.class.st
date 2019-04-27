@@ -1,5 +1,5 @@
 Class {
-	#name : #PDSAlgorithmList,
+	#name : #PDSAlgorithmsList,
 	#superclass : #ComposablePresenter,
 	#instVars : [
 		'list',
@@ -9,7 +9,7 @@ Class {
 }
 
 { #category : #specs }
-PDSAlgorithmList class >> defaultSpec [
+PDSAlgorithmsList class >> defaultSpec [
 	^ SpecColumnLayout composed
 		newRow: [ :row | row add: #description ] height: self labelHeight;
 		add: #list;
@@ -17,18 +17,18 @@ PDSAlgorithmList class >> defaultSpec [
 ]
 
 { #category : #'as yet unclassified' }
-PDSAlgorithmList >> availablePlaygrounds [
+PDSAlgorithmsList >> availablePlaygrounds [
 
  ^ AlgorithmPlayground allSubclasses
 ]
 
 { #category : #accessing }
-PDSAlgorithmList >> description [
+PDSAlgorithmsList >> description [
 	^ description
 ]
 
 { #category : #initialization }
-PDSAlgorithmList >> initializeWidgets [
+PDSAlgorithmsList >> initializeWidgets [
 	description := self newLabel.
 	list := (self instantiate: ListPresenter)
 		displayBlock: [ :item | item algorithmName ];
@@ -39,21 +39,21 @@ PDSAlgorithmList >> initializeWidgets [
 ]
 
 { #category : #'accessing - private' }
-PDSAlgorithmList >> items [
+PDSAlgorithmsList >> items [
 	list items: { 'Bloom Filter'.'Hiperloglog' }
 ]
 
 { #category : #accessing }
-PDSAlgorithmList >> list [
+PDSAlgorithmsList >> list [
 	^ list
 ]
 
 { #category : #accessing }
-PDSAlgorithmList >> title [
+PDSAlgorithmsList >> title [
 	^ 'PDS Algorithms'
 ]
 
 { #category : #api }
-PDSAlgorithmList >> whenSelectedItemChanged: aBlock [
+PDSAlgorithmsList >> whenSelectedItemChanged: aBlock [
 	list whenSelectedItemChanged: aBlock
 ]

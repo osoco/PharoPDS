@@ -1,5 +1,5 @@
 Class {
-	#name : #PDSAlgorithmBrowser,
+	#name : #PDSAlgorithmsBrowser,
 	#superclass : #ComposablePresenter,
 	#instVars : [
 		'algorithms',
@@ -10,7 +10,7 @@ Class {
 }
 
 { #category : #specs }
-PDSAlgorithmBrowser class >> defaultSpec [
+PDSAlgorithmsBrowser class >> defaultSpec [
 	^ SpecRowLayout composed
 		newColumn: [ :c | c add: #algorithms ] width: 224;
 		addSplitter;
@@ -19,19 +19,19 @@ PDSAlgorithmBrowser class >> defaultSpec [
 ]
 
 { #category : #'instance creation' }
-PDSAlgorithmBrowser class >> open [ 
+PDSAlgorithmsBrowser class >> open [ 
 <script: 'self open'>
 
 self new openWithSpec 
 ]
 
 { #category : #accessing }
-PDSAlgorithmBrowser >> algorithms [
+PDSAlgorithmsBrowser >> algorithms [
 	^ algorithms
 ]
 
 { #category : #'initialize-release' }
-PDSAlgorithmBrowser >> defaultView [
+PDSAlgorithmsBrowser >> defaultView [
 | cm |
 cm := self newLabel.
 cm label: 'Select something from the list please.'.
@@ -39,12 +39,12 @@ cm label: 'Select something from the list please.'.
 ]
 
 { #category : #api }
-PDSAlgorithmBrowser >> extent [
+PDSAlgorithmsBrowser >> extent [
 	^ 1024 @ 800
 ]
 
 { #category : #initialization }
-PDSAlgorithmBrowser >> initializePresenter [
+PDSAlgorithmsBrowser >> initializePresenter [
 	algorithms
 		whenSelectedItemChanged: [ :aPlayground | 
 			view := self instantiate: aPlayground.
@@ -53,29 +53,29 @@ PDSAlgorithmBrowser >> initializePresenter [
 ]
 
 { #category : #initialization }
-PDSAlgorithmBrowser >> initializeWidgets [
-	algorithms := self instantiate: PDSAlgorithmList.
+PDSAlgorithmsBrowser >> initializeWidgets [
+	algorithms := self instantiate: PDSAlgorithmsList.
 	"state := $h."
 	view := self defaultView
 ]
 
 { #category : #accessing }
-PDSAlgorithmBrowser >> state [
+PDSAlgorithmsBrowser >> state [
 	^ state
 ]
 
 { #category : #initialization }
-PDSAlgorithmBrowser >> title [ 
+PDSAlgorithmsBrowser >> title [ 
 ^'PDS Algorithms Viewer'
 ]
 
 { #category : #accessing }
-PDSAlgorithmBrowser >> view [
+PDSAlgorithmsBrowser >> view [
 	^ view
 ]
 
 { #category : #'as yet unclassified' }
-PDSAlgorithmBrowser >> widgetFor: aData [
+PDSAlgorithmsBrowser >> widgetFor: aData [
 	| cm |
 	aData  = 'Bloom Filter'
 		ifTrue: [ cm := self instantiate: BloomFilterPlayground.

@@ -41,11 +41,11 @@ PDSWorldMenu class >> documentationMenuOn: aBuilder [
 	<worldMenu>
 	(aBuilder item: #pdsDocumentationMenu)
 		parent: #pdsMenu;
-		label: 'Interactive documentation';
+		label: 'Project documentation';
 		target: self;
 		selector: #openPDSDocumentation;
 		order: 1;
-		help: 'Open PDS Documentation';
+		help: 'Open PharoPDS documentation';
 		icon: self tutorialIcon
 ]
 
@@ -57,7 +57,7 @@ PDSWorldMenu class >> openBloomFilterTutorial [
 
 { #category : #'api - actions' }
 PDSWorldMenu class >> openBrowser [ 
-PDSAlgorithmBrowser open
+PDSAlgorithmsBrowser open
 ]
 
 { #category : #'api - actions' }
@@ -74,8 +74,8 @@ PDSWorldMenu class >> pds [
 PDSWorldMenu class >> rootMenuOn: aBuilder [
 	<worldMenu>
 	(aBuilder item: #pdsMenu)
-		label: 'P11c Data Structures';
-		icon: self pds ;
+		label: 'PharoPDS';
+		icon: self pds;
 		order: 100
 ]
 
