@@ -28,20 +28,6 @@ PDSBitArray >> bitAt: index [
 		ifFalse: [ ^ 1 ]
 ]
 
-{ #category : #'as yet unclassified' }
-PDSBitArray >> drawBitSetOn: aMondrian [
-	| nodes |
-	nodes := (1 to: self size)
-		collect: [ :bitIndex | (self bitAt: bitIndex) = 1 ].
-	aMondrian shape rectangle
-		size: 20;
-		if: [ :el | el ] color: Color blue trans;
-		if: [ :el | el not ] color: Color green trans.
-	aMondrian nodes: nodes.
-	aMondrian layout grid.
-	aMondrian build
-]
-
 { #category : #'accessing - private' }
 PDSBitArray >> incOccupancy [
 	occupancy := occupancy + 1

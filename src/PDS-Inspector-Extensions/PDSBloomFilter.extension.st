@@ -1,6 +1,11 @@
 Extension { #name : #PDSBloomFilter }
 
 { #category : #'*PDS-Inspector-Extensions' }
+PDSBloomFilter >> drawBitSetOn: aMondrian [
+	bitStorage drawBitSetOn: aMondrian
+]
+
+{ #category : #'*PDS-Inspector-Extensions' }
 PDSBloomFilter >> fppCurve [
 	| fpp ds1 g p ds |
 	g := RTGrapher new.

@@ -74,11 +74,6 @@ PDSBloomFilter >> contains: anObject [
 
 ]
 
-{ #category : #'as yet unclassified' }
-PDSBloomFilter >> drawBitSetOn: aMondrian [
-	bitStorage drawBitSetOn: aMondrian
-]
-
 { #category : #accessing }
 PDSBloomFilter >> fpp [
 	^ 1 - (self hashes * self size / self storageSize) negated exp
