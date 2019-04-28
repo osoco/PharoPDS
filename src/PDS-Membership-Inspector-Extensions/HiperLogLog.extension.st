@@ -19,24 +19,24 @@ HiperLogLog >> gtInspectorParametersIn: composite [
 { #category : #'*PDS-Membership-Inspector-Extensions' }
 HiperLogLog >> gtInspectorPipelineIn: composite [
 	<gtInspectorPresentationOrder: 1>
-	| c e v h |
+	| countersElement totalElements v hashValueElements edge |
 	^ composite roassal2
 		title: 'Pipeline';
 		initializeView: [ v := RTView new.
-			c := self makeCountersElementsInView: v.
-			h := self makeHashValueElementsInView: v.
-			e := c.
-			e add: h.
-			RTEdgeBuilder new
-				view: v;
-				elements: e;
-				connectFrom: [ 'Last Hash Value' ].
-			e
+			countersElement := self makeCountersElementsInView: v.
+			hashValueElements := self makeHashValueElementsInView: v.
+			totalElements := RTGroup new.
+			totalElements
+				add: countersElement;
+				add: hashValueElements.
+			edge := RTLine edgeFrom: hashValueElements to: countersElement.
+			v add: edge.
+			totalElements
 				@
 					(RTShowEdge new
-						connectToAll: [ :element | Array with: 'Index Bits' ];
+						connectToAll: [ :element | Array with: tempCounterPosition ];
 						shape: (RTLine new color: (Color blue alpha: 0.4))).
-			RTTreeLayout on: e.
+			RTTreeLayout on: totalElements.
 			v ]
 ]
 
@@ -46,27 +46,63 @@ HiperLogLog >> hashBitAt: aBitPosition [
 ]
 
 { #category : #'*PDS-Membership-Inspector-Extensions' }
+HiperLogLog >> makeBucketElementsAt: aCountersPosition inView: aView [
+	| value colorValue bucketElement |
+	value := counters at: aCountersPosition.
+	colorValue := value = 0
+		ifTrue: [ Color green trans ]
+		ifFalse: [ Color blue trans ].
+	bucketElement := (RTBox new
+		size: 30;
+		color: colorValue)
+		+
+			(RTLabel
+				color: Color black;
+				text: value) elementOn: 'Bucket ' , aCountersPosition asString.
+"COMENTAR PARA QUE FUNCIONE SI HACEMOS CON FOR:NEST:"
+	aView add: bucketElement .
+	^ bucketElement
+]
+
+{ #category : #'*PDS-Membership-Inspector-Extensions' }
 HiperLogLog >> makeCountersElementsInView: aView [
-	| c |
-	c := RTGroup new.
-	1 to: counters size do: [ :i | 
-		| value colorValue |
-		value := counters at: i.
-		colorValue := value = 0
-			ifTrue: [ Color green trans ]
-			ifFalse: [ Color blue trans ].
-		c
-			add:
-				(((RTEllipse new
-					size: 30;
-					color: colorValue)
-					+
-						(RTLabel
-							color: Color black;
-							text: value) elementOn: 'Bucket ' , i asString) view: aView) ].
-						c@RTPopup .
-	aView addAll: c.
-	^ c
+	" FUNCIONA LA VISUALIZACION COMO GRUPO PERO LUEGO NO EDGE
+	| countersElement |
+	countersElement := (RTBox + RTLabel new borderColor: Color red trans)
+		elementsOn: #('Counters').
+	aView addAll: countersElement.
+	RTNest new
+		for: countersElement
+		add: [ :group :model | 
+			multiSets to: 1 by: -1 do:
+				[ :i | group add: (self makeBucketElementsAt: i inView: aView) @ RTPopup ].
+			RTHorizontalLineLayout on: group ].
+	RTHorizontalLineLayout new on: countersElement.
+	countersElement @ RTPopup.
+	^ countersElement "
+
+	| countersElement bucketsElements |
+	countersElement := (RTBox + RTLabel borderColor: Color red trans)
+		elementOn: 'Counters'.
+	aView add: countersElement.
+	bucketsElements := RTGroup new.
+	multiSets to: 1 by: -1 do:
+		[ :each | bucketsElements add: (self makeBucketElementsAt: each inView: aView) ].
+		RTHorizontalLineLayout on: bucketsElements .
+	RTNest new on: countersElement nest: bucketsElements.
+
+	countersElement @ RTPopup.
+	^ countersElement
+
+	"	RTNest new
+		for: countersElement
+		add: [ :group :model | 
+			indexBits to: 1 by: -1 do:
+				[ :i | group add: (self makeBucketsElementAt: i inView: aView) @ RTPopup ].
+			RTHorizontalLineLayout on: group ].
+	 End of statement list encountered ->RTHorizontalLineLayout new on: indexBitsElement.
+	indexBitsElement @ RTPopup.
+	^ indexBitsElement"
 ]
 
 { #category : #'*PDS-Membership-Inspector-Extensions' }
@@ -90,8 +126,8 @@ HiperLogLog >> makeHashBitElementAt: aBitPosition inView: aView [
 { #category : #'*PDS-Membership-Inspector-Extensions' }
 HiperLogLog >> makeHashIndexBitsElementsInView: aView [
 	| indexBitsElement |
-	indexBitsElement := (RTBox + RTLabel new borderColor: Color red trans)
-		elementsOn: #('Index Bits').
+	indexBitsElement := (RTBox + (RTLabel new text: 'Index Bits')
+		borderColor: Color red trans) elementsOn: (Array with: tempCounterPosition).
 	aView addAll: indexBitsElement.
 	RTNest new
 		for: indexBitsElement
