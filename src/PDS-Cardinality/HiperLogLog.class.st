@@ -8,7 +8,11 @@ Class {
 		'multiSets',
 		'indexBits',
 		'restBits',
-		'estimatedElements'
+		'estimatedElements',
+		'tempHash',
+		'tempCounterPosition',
+		'tempRank',
+		'hashBits'
 	],
 	#category : #'PDS-Cardinality'
 }
@@ -51,12 +55,13 @@ HiperLogLog class >> newWithStandarError: aStandarError andHash: aHash [
 
 { #category : #api }
 HiperLogLog >> add: anObject [
-	| tempHash tempCounterPosition tempRank |
+	
 	tempHash := hash hash: anObject.
 	tempCounterPosition := (tempHash & (2 ** indexBits - 1)) + 1.
 	tempRank := self rank: tempHash >> indexBits.
 	tempRank > (counters at: tempCounterPosition)
-		ifTrue: [ counters at: tempCounterPosition put: tempRank ]
+		ifTrue: [ counters at: tempCounterPosition put: tempRank ].
+	self estimatedElements
 ]
 
 { #category : #'private - computing' }
@@ -69,6 +74,11 @@ HiperLogLog >> biasCorrection [
 		ifTrue: [ ^ 0.697 ].
 	indexBits = 4
 		ifTrue: [ ^ 0.673 ]
+]
+
+{ #category : #accessing }
+HiperLogLog >> counters [
+^counters copy .
 ]
 
 { #category : #accessing }
@@ -101,6 +111,11 @@ HiperLogLog >> harmonicMean [
 	^ multiSets / total
 ]
 
+{ #category : #accessing }
+HiperLogLog >> hash [
+^counters hash .
+]
+
 { #category : #adding }
 HiperLogLog >> rank: anInteger [
 	1 to: restBits do: [ :i | 
@@ -115,9 +130,13 @@ HiperLogLog >> setStandarError: aStandarError withHash: aHash [
 
 	targetStandarError := aStandarError.
 	hash := aHash.
+	hashBits := 32.
 	indexBits := self class calculateIndexBits: aStandarError.
-	restBits := 32 - indexBits.
+	restBits := hashBits - indexBits.
 	multiSets := 2 ** indexBits.
 	counters := Array new: multiSets withAll: 0.
-	estimatedElements := 0
+	estimatedElements := 0.
+	tempHash := 0.
+	tempCounterPosition := 0.
+	tempRank := 0
 ]
