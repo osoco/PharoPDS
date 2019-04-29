@@ -73,7 +73,7 @@ As we have shown, Bloom filters can lead to situations where some element is not
 
 Fortunately, a Bloom filter has a predictable false positive probability (==FPP==):
 
-${icebergFile:path=osoco/pharo-probabilistic-data-structures/doc/pfp_formula.png|expanded=true|height=100|show=#gtFigureFor:}$
+${icebergFile:path=osoco/PharoPDS/doc/images/pfp_formula.png|expanded=true|height=100|show=#gtFigureFor:}$
 
 where ==n== is the number of values already added, ==k== the number of hashes and ==m== the length of the filter (i.e. the bit array size).
 
@@ -81,11 +81,11 @@ In the extreme case, when the filter is full every lookup will yield a (false) p
 
 In practice, the length of the filter ==m==, under given false positive probability ==Pfp== and the expected number of elements ==n==, can be determined by the formula:
 
-${icebergFile:path=osoco/pharo-probabilistic-data-structures/doc/m_formula.png|expanded=true|height=100|show=#gtFigureFor:}$
+${icebergFile:path=osoco/PharoPDS/doc/images/m_formula.png|expanded=true|height=100|show=#gtFigureFor:}$
 
 For the given ratio of ==m/n==, meaning the number of allocated bits per element, the false positive probability can be tuned by choosing the number of hash functions ==k==. The optimal choice of ==k== is computed by minimizing the probability of false positives with the following formula:
 
-${icebergFile:path=osoco/pharo-probabilistic-data-structures/doc/k_formula.png|expanded=true|height=100|show=#gtFigureFor:}$
+${icebergFile:path=osoco/PharoPDS/doc/images/k_formula.png|expanded=true|height=100|show=#gtFigureFor:}$
 
 Our ==PDSBloomFilter== implementation is built specifying the estimated number of elements to be added (==n==) and the false positive probability (==FPP==), then the data structure uses the previous formula to compute the optimal number of hashes and bit array length.
 
@@ -185,11 +185,11 @@ PDSBloomFilterPlayground open
 
 !! Context
 
-'Donald Knuth' in his famous 'The Art of Computer Programming' writes the following about Bloom filters: 
+''Donald Knuth'' in his famous 'The Art of Computer Programming' writes the following about Bloom filters: 
 
 ""Imagine a search application with a large database in which no calculation needs to be done if the search was unsucessful. For example, we might want to check somebody's credit rating or passport number, and if no record for that person appears in the file we don't have to investigate further. Similarly in an application to computerized typesetting, we might have a simple algorithm that hyphenates most words correctly, but it fails on some 50,000 exception words; if we don't find the word in the exception file we are free to use the simple algorithm.""
 
-Also 'Broder' and 'Mitzenmacher' stablished the following principle:
+Also ''Broder'' and ''Mitzenmacher'' stablished the following principle:
 
 ""Whenever a list or set is used, and space is at a premium, consider using a Bloom filter if the effect of false positives can be mitigated.""
 

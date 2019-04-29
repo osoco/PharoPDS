@@ -50,9 +50,32 @@ PDSWorldMenu class >> documentationMenuOn: aBuilder [
 ]
 
 { #category : #'api - actions' }
+PDSWorldMenu class >> ensureGToolkitAndDo: aBlock [
+	| result |
+	self isGToolkitLoaded
+		ifTrue: [ aBlock value ]
+		ifFalse: [ result := UIManager default
+				confirm:
+					'Documentation consists of interactive tutorials based on the new Documenter tool, so it requires GToolkit. You can check PDSProbabilisticDataStructures'' comments or install dependencies now'
+				trueChoice: 'Install now'
+				falseChoice: 'Cancel'.
+			result
+				ifTrue: [ Metacello new
+						baseline: #ProbabilisticDataStructures;
+						repository: 'github://osoco/PharoPDS:master/src';
+						load: 'All' ] ]
+]
+
+{ #category : #testing }
+PDSWorldMenu class >> isGToolkitLoaded [
+	Smalltalk at: #GtInspector ifPresent: [ ^ true ].
+	^ false
+]
+
+{ #category : #'api - actions' }
 PDSWorldMenu class >> openBloomFilterTutorial [
-	GtInspector
-		openOnPlayBook: (GtDocument forClass: PDSBloomFilter )
+	self ensureGToolkitAndDo: [ GtInspector openOnPlayBook: (GtDocument forClass: PDSBloomFilter) ]
+
 ]
 
 { #category : #'api - actions' }
@@ -62,7 +85,10 @@ PDSAlgorithmsBrowser open
 
 { #category : #'api - actions' }
 PDSWorldMenu class >> openPDSDocumentation [
-	GtInspector openOnPlayBook: (GtDocument forClass: BaselineOfProbabilisticDataStructures )
+
+	self
+		ensureGToolkitAndDo: [ GtInspector
+				openOnPlayBook: (GtDocument forClass: BaselineOfProbabilisticDataStructures) ]
 ]
 
 { #category : #icons }
