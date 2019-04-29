@@ -1,6 +1,17 @@
 Extension { #name : #HiperLogLog }
 
 { #category : #'*PDS-Membership-Inspector-Extensions' }
+HiperLogLog >> arrowedAssociation: originElement to: destinationElement inView: v [
+			|arrow line|
+			arrow := RTArrowedLine new color: Color black.
+			arrow attachPoint: RTVerticalAttachPoint new.
+			line := arrow 
+				edgeFrom: originElement 
+				to: destinationElement .
+			v add: line.
+]
+
+{ #category : #'*PDS-Membership-Inspector-Extensions' }
 HiperLogLog >> gtInspectorParametersIn: composite [
 	<gtInspectorPresentationOrder: 2>
 	^ composite fastTable
@@ -19,24 +30,49 @@ HiperLogLog >> gtInspectorParametersIn: composite [
 { #category : #'*PDS-Membership-Inspector-Extensions' }
 HiperLogLog >> gtInspectorPipelineIn: composite [
 	<gtInspectorPresentationOrder: 1>
-	| countersElement totalElements v hashValueElements edge |
+	| countersElement totalElements v hashValueElement objectElement hashFunctionElement |
 	^ composite roassal2
 		title: 'Pipeline';
 		initializeView: [ v := RTView new.
-			countersElement := self makeCountersElementsInView: v.
-			hashValueElements := self makeHashValueElementsInView: v.
+			v @ RTDraggableView.
+			objectElement := self makeObjectElementInView: v.
+			hashFunctionElement := self makeHashFunctionElementInView: v.
+			hashValueElement := self makeHashValueElementInView: v.
+			countersElement := self makeCountersElementInView: v.
+			hashFunctionElement translateBy: 0@120.
+			hashValueElement translateBy: 0 @ 240.
+			countersElement translateBy: 0 @ 360.
 			totalElements := RTGroup new.
 			totalElements
 				add: countersElement;
-				add: hashValueElements.
-			edge := RTLine edgeFrom: hashValueElements to: countersElement.
-			v add: edge.
-			totalElements
-				@
-					(RTShowEdge new
-						connectToAll: [ :element | Array with: tempCounterPosition ];
-						shape: (RTLine new color: (Color blue alpha: 0.4))).
-			RTTreeLayout on: totalElements.
+				add: hashValueElement;
+				add: objectElement;
+				add: hashFunctionElement .
+			self
+				arrowedAssociation: objectElement
+				to: hashFunctionElement 
+				inView: v.
+
+			self
+				arrowedAssociation: hashFunctionElement 
+				to: hashValueElement
+				inView: v.
+			self
+				arrowedAssociation: hashValueElement
+				to: countersElement
+				inView: v.
+			v
+				add:
+					(RTLine new
+						color: (Color blue alpha: 0.4);
+						edgeFrom: (v elementFromModel: 'Bucket ' , tempCounterPosition asString)
+							to: (v elementFromModel: tempCounterPosition)).
+			v
+				add:
+					(RTLine new
+						color: (Color blue alpha: 0.4);
+						edgeFrom: (v elementFromModel: 'Bucket ' , tempCounterPosition asString)
+							to: (v elementFromModel: 'Rest Bits')).
 			v ]
 ]
 
@@ -59,27 +95,14 @@ HiperLogLog >> makeBucketElementsAt: aCountersPosition inView: aView [
 			(RTLabel
 				color: Color black;
 				text: value) elementOn: 'Bucket ' , aCountersPosition asString.
-"COMENTAR PARA QUE FUNCIONE SI HACEMOS CON FOR:NEST:"
-	aView add: bucketElement .
+
+	bucketElement @ RTPopup.
+	aView add: bucketElement.
 	^ bucketElement
 ]
 
 { #category : #'*PDS-Membership-Inspector-Extensions' }
-HiperLogLog >> makeCountersElementsInView: aView [
-	" FUNCIONA LA VISUALIZACION COMO GRUPO PERO LUEGO NO EDGE
-	| countersElement |
-	countersElement := (RTBox + RTLabel new borderColor: Color red trans)
-		elementsOn: #('Counters').
-	aView addAll: countersElement.
-	RTNest new
-		for: countersElement
-		add: [ :group :model | 
-			multiSets to: 1 by: -1 do:
-				[ :i | group add: (self makeBucketElementsAt: i inView: aView) @ RTPopup ].
-			RTHorizontalLineLayout on: group ].
-	RTHorizontalLineLayout new on: countersElement.
-	countersElement @ RTPopup.
-	^ countersElement "
+HiperLogLog >> makeCountersElementInView: aView [
 
 	| countersElement bucketsElements |
 	countersElement := (RTBox + RTLabel borderColor: Color red trans)
@@ -88,21 +111,22 @@ HiperLogLog >> makeCountersElementsInView: aView [
 	bucketsElements := RTGroup new.
 	multiSets to: 1 by: -1 do:
 		[ :each | bucketsElements add: (self makeBucketElementsAt: each inView: aView) ].
-		RTHorizontalLineLayout on: bucketsElements .
+	RTHorizontalLineLayout on: bucketsElements.
 	RTNest new on: countersElement nest: bucketsElements.
-
-	countersElement @ RTPopup.
+	countersElement @ RTPopup @ RTDraggable.
 	^ countersElement
 
-	"	RTNest new
-		for: countersElement
-		add: [ :group :model | 
-			indexBits to: 1 by: -1 do:
-				[ :i | group add: (self makeBucketsElementAt: i inView: aView) @ RTPopup ].
-			RTHorizontalLineLayout on: group ].
-	 End of statement list encountered ->RTHorizontalLineLayout new on: indexBitsElement.
-	indexBitsElement @ RTPopup.
-	^ indexBitsElement"
+]
+
+{ #category : #'*PDS-Membership-Inspector-Extensions' }
+HiperLogLog >> makeElementWithModel: aModel withWidth: aWidth inView: aView [
+	| element |
+	element := (RTBox new
+		width: aWidth;
+		height: 30) + RTLabel elementOn: aModel .
+	aView add: element.
+	element @ RTPopup @ RTDraggable.
+	^ element
 ]
 
 { #category : #'*PDS-Membership-Inspector-Extensions' }
@@ -119,8 +143,18 @@ HiperLogLog >> makeHashBitElementAt: aBitPosition inView: aView [
 			(RTLabel
 				color: Color black;
 				text: value) elementOn: 'Bit ' , aBitPosition asString.
-"	aView add: bitElement".
+
 	^ bitElement
+]
+
+{ #category : #'*PDS-Membership-Inspector-Extensions' }
+HiperLogLog >> makeHashFunctionElementInView: aView [
+	| hashFunctionElement |
+	hashFunctionElement := self
+		makeElementWithModel: 'Hash Function'
+		withWidth: 120
+		inView: aView.
+	^ hashFunctionElement
 ]
 
 { #category : #'*PDS-Membership-Inspector-Extensions' }
@@ -159,9 +193,9 @@ HiperLogLog >> makeHashRestBitsElementsInView: aView [
 ]
 
 { #category : #'*PDS-Membership-Inspector-Extensions' }
-HiperLogLog >> makeHashValueElementsInView: aView [
+HiperLogLog >> makeHashValueElementInView: aView [
 	| hashValueElement restAndIndexElements |
-	hashValueElement := (RTBox+RTLabel)  elementOn: 'Last Hash Value'.
+	hashValueElement := RTBox + RTLabel elementOn: 'Last Hash Value'.
 	aView add: hashValueElement.
 	restAndIndexElements := RTGroup new.
 	restAndIndexElements
@@ -169,24 +203,14 @@ HiperLogLog >> makeHashValueElementsInView: aView [
 		add: (self makeHashIndexBitsElementsInView: aView) @ RTPopup.
 	RTHorizontalLineLayout new on: restAndIndexElements.
 	RTNest new on: hashValueElement nest: restAndIndexElements.
-	"		hashValueElement := RTBox elementsOn: #('Last Hash Value').
-	aView addAll: hashValueElement.
-		RTNest new
-		for: hashValueElement
-		add: [ :group :model | 
-			group add: (self makeHashIndexBitsElementsInView: aView) @ RTPopup.
-			group add: (self makeHashRestBitsElementsInView: aView) @ RTPopup.
-			RTHorizontalLineLayout on: group ]."
-
-	"	indexBitsElement := RTBox elementsOn: #('Index Bits').
-	aView addAll: indexBitsElement.
-	RTNest new
-		for: indexBitsElement
-		add: [ :group :model | 
-			indexBits to: 1 by: -1 do:
-				[ :i | group add: (self makeHashBitElementAt: i inView: aView) @ RTPopup ].
-			RTHorizontalLineLayout on: group ]."
-	"	RTHorizontalLineLayout new on: hashValueElement."
-	hashValueElement @ RTPopup.
+	
+	hashValueElement @ RTPopup @ RTDraggable.
 	^ hashValueElement
+]
+
+{ #category : #'*PDS-Membership-Inspector-Extensions' }
+HiperLogLog >> makeObjectElementInView: aView [
+	| objectElement |
+	objectElement := self makeElementWithModel: 'Object' withWidth: 60 inView: aView.
+	^ objectElement
 ]
