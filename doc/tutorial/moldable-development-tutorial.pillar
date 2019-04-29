@@ -25,5 +25,5 @@ ${changes:01-inspector-parameters-extension}$
 Now, if you inspect the same Bloom filter instance we created previously you should see a table containing the key parameters for the filter:
 
 [[[
-(PDSBloomFilter new: 10 fpp: 0.03) inspect
+PDSWBloomFilterExamples new emptyFilter inspect
 ]]]
