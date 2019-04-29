@@ -14,8 +14,7 @@ PDSWorldMenu class >> bloomFilterTutorialMenuOn: aBuilder [
 		selector: #openBloomFilterTutorial;
 		order: 2;
 		help: 'Open Bloom Filter interactive tutorial';
-		icon: self tutorialIcon;
-		withSeparatorAfter
+		icon: self tutorialIcon
 ]
 
 { #category : #icons }
@@ -72,6 +71,20 @@ PDSWorldMenu class >> isGToolkitLoaded [
 	^ false
 ]
 
+{ #category : #'world menu' }
+PDSWorldMenu class >> moldableDevelopmentTutorialMenuOn: aBuilder [
+	<worldMenu>
+	(aBuilder item: #pdsMoldableDevelopmentTutorialMenu)
+		parent: #pdsMenu;
+		label: 'Moldable development tutorial';
+		target: self;
+		selector: #openMoldableDevelopmentTutorial;
+		order: 3;
+		help: 'Open the moldable development tutorial';
+		icon: self tutorialIcon;
+		withSeparatorAfter
+]
+
 { #category : #'api - actions' }
 PDSWorldMenu class >> openBloomFilterTutorial [
 	self ensureGToolkitAndDo: [ GtInspector openOnPlayBook: (GtDocument forClass: PDSBloomFilter) ]
@@ -81,6 +94,12 @@ PDSWorldMenu class >> openBloomFilterTutorial [
 { #category : #'api - actions' }
 PDSWorldMenu class >> openBrowser [ 
 PDSAlgorithmsBrowser open
+]
+
+{ #category : #'api - actions' }
+PDSWorldMenu class >> openMoldableDevelopmentTutorial [
+	self ensureGToolkitAndDo: [ 	GtInspector openOnPlayBook: (GtDocument forFile: (GtIcebergUtility documentAtPath: (Path * 'osoco'/ 'PharoPDS' / 'doc' / 'tutorial' / 'moldable-development-tutorial.pillar'))) ]
+
 ]
 
 { #category : #'api - actions' }
