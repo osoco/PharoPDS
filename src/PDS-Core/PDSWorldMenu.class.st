@@ -56,7 +56,7 @@ PDSWorldMenu class >> ensureGToolkitAndDo: aBlock [
 		ifTrue: [ aBlock value ]
 		ifFalse: [ result := UIManager default
 				confirm:
-					'Documentation consists of interactive tutorials based on the new Documenter tool, so it requires GToolkit. You can check PDSProbabilisticDataStructures'' comments or install dependencies now'
+					'This documentation consists of interactive tutorials based and requires GToolkit installation. You can check the class comments or install dependencies now'
 				trueChoice: 'Install now'
 				falseChoice: 'Cancel'.
 			result
