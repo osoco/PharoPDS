@@ -1,10 +1,10 @@
 Class {
-	#name : #AlgorithmPlayground,
+	#name : #PDSAlgorithmPlayground,
 	#superclass : #ComposablePresenter,
 	#category : #'PDS-Playground-Base'
 }
 
 { #category : #'as yet unclassified' }
-AlgorithmPlayground class >> algorithmName [
+PDSAlgorithmPlayground class >> algorithmName [
  self subclassResponsibility
 ]

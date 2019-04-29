@@ -1,6 +1,6 @@
 Class {
-	#name : #BloomFilterPlayground,
-	#superclass : #AlgorithmPlayground,
+	#name : #PDSBloomFilterPlayground,
+	#superclass : #PDSAlgorithmPlayground,
 	#instVars : [
 		'toolbar',
 		'content'
@@ -9,12 +9,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-BloomFilterPlayground class >> algorithmName [
+PDSBloomFilterPlayground class >> algorithmName [
  ^ 'Bloom Filter'
 ]
 
 { #category : #specs }
-BloomFilterPlayground class >> defaultSpec [
+PDSBloomFilterPlayground class >> defaultSpec [
 	^ SpecColumnLayout composed
 		newRow: [ :row  | row add:#toolbar] height: self toolbarHeight;
 		add: #content;
@@ -22,46 +22,46 @@ BloomFilterPlayground class >> defaultSpec [
 ]
 
 { #category : #'instance creation' }
-BloomFilterPlayground class >> open [
+PDSBloomFilterPlayground class >> open [
 	<script: 'self open'>
  self new openWithSpec
 ]
 
 { #category : #accessing }
-BloomFilterPlayground >> content [
+PDSBloomFilterPlayground >> content [
 	^ content
 ]
 
 { #category : #initialization }
-BloomFilterPlayground >> extent [
+PDSBloomFilterPlayground >> extent [
 	^ 800 @ 800
 ]
 
 { #category : #initialization }
-BloomFilterPlayground >> initializePresenter [
+PDSBloomFilterPlayground >> initializePresenter [
 	toolbar whenBloomCreatedDo: [ :bloom |
 		content bloom: bloom
 		 ]
 ]
 
 { #category : #initialization }
-BloomFilterPlayground >> initializeWidgets [
-	toolbar := self instantiate: BloomFilterPlaygroundToolbar.
-	content := self instantiate: BloomFilterPlaygroundContent.
+PDSBloomFilterPlayground >> initializeWidgets [
+	toolbar := self instantiate: PDSBloomFilterPlaygroundToolbar.
+	content := self instantiate: PDSBloomFilterPlaygroundContent.
 	self focusOrder add: toolbar; add: content
 ]
 
 { #category : #accessing }
-BloomFilterPlayground >> name [
+PDSBloomFilterPlayground >> name [
 	^ 'Bloom Filter'
 ]
 
 { #category : #initialization }
-BloomFilterPlayground >> title [ 
+PDSBloomFilterPlayground >> title [ 
 ^ 'BloomFilter Playground'
 ]
 
 { #category : #accessing }
-BloomFilterPlayground >> toolbar [
+PDSBloomFilterPlayground >> toolbar [
 	^ toolbar
 ]

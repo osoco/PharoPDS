@@ -1,5 +1,5 @@
 Class {
-	#name : #BloomFilterCreationForm,
+	#name : #PDSBloomFilterCreationForm,
 	#superclass : #ComposablePresenter,
 	#instVars : [
 		'labelTargetElements',
@@ -13,7 +13,7 @@ Class {
 }
 
 { #category : #specs }
-BloomFilterCreationForm class >> defaultSpec [
+PDSBloomFilterCreationForm class >> defaultSpec [
 	^ SpecColumnLayout composed
 		newRow: [ :row | 
 			row
@@ -28,7 +28,7 @@ BloomFilterCreationForm class >> defaultSpec [
 ]
 
 { #category : #initialization }
-BloomFilterCreationForm >> initializePresenter [
+PDSBloomFilterCreationForm >> initializePresenter [
 	targetElements whenTextChanged: self validationBlock.
 	targetFpp whenTextChanged: self validationBlock
 
@@ -36,7 +36,7 @@ BloomFilterCreationForm >> initializePresenter [
 ]
 
 { #category : #initialization }
-BloomFilterCreationForm >> initializeWidgets [
+PDSBloomFilterCreationForm >> initializeWidgets [
 	areValidParameters := false.
 	labelTargetElements := self newLabel.
 	targetElements := self newTextInput autoAccept: true.
@@ -56,56 +56,56 @@ BloomFilterCreationForm >> initializeWidgets [
 ]
 
 { #category : #accessing }
-BloomFilterCreationForm >> labelFpp [
+PDSBloomFilterCreationForm >> labelFpp [
 	^ labelFpp
 ]
 
 { #category : #accessing }
-BloomFilterCreationForm >> labelTargetElements [
+PDSBloomFilterCreationForm >> labelTargetElements [
 	^ labelTargetElements
 ]
 
 { #category : #private }
-BloomFilterCreationForm >> maxTargetElements [
+PDSBloomFilterCreationForm >> maxTargetElements [
 ^ 200
 ]
 
 { #category : #private }
-BloomFilterCreationForm >> maxTargetFpp [
+PDSBloomFilterCreationForm >> maxTargetFpp [
 	^ 0.99
 ]
 
 { #category : #private }
-BloomFilterCreationForm >> minTargetFpp [
+PDSBloomFilterCreationForm >> minTargetFpp [
 	^ 0.01
 ]
 
 { #category : #accessing }
-BloomFilterCreationForm >> targetElements [
+PDSBloomFilterCreationForm >> targetElements [
 	^ targetElements
 ]
 
 { #category : #accessing }
-BloomFilterCreationForm >> targetFpp [
+PDSBloomFilterCreationForm >> targetFpp [
 	^ targetFpp
 ]
 
 { #category : #private }
-BloomFilterCreationForm >> validateParameters [
+PDSBloomFilterCreationForm >> validateParameters [
 	^ [ self validateTargetElements and: self validateTargetFpp ]
 		on: Error
 		do: [ false ]
 ]
 
 { #category : #private }
-BloomFilterCreationForm >> validateTargetElements [
+PDSBloomFilterCreationForm >> validateTargetElements [
 	| targetElementsValue |
 	targetElementsValue := targetElements text asInteger.
 	^ targetElementsValue isNotNil and: targetElementsValue <= self maxTargetElements
 ]
 
 { #category : #private }
-BloomFilterCreationForm >> validateTargetFpp [
+PDSBloomFilterCreationForm >> validateTargetFpp [
 	| targetFppValue |
 	targetFppValue := targetFpp text asNumber.
 	^ targetFppValue isNotNil
@@ -113,7 +113,7 @@ BloomFilterCreationForm >> validateTargetFpp [
 ]
 
 { #category : #private }
-BloomFilterCreationForm >> validationBlock [
+PDSBloomFilterCreationForm >> validationBlock [
 	^ [ | newAreValidParameters |
 	newAreValidParameters := self validateParameters.
 	areValidParameters ~= newAreValidParameters
@@ -123,7 +123,7 @@ BloomFilterCreationForm >> validationBlock [
 ]
 
 { #category : #'api - events' }
-BloomFilterCreationForm >> whenParametersValidationResultChangedDo: aBlock [
+PDSBloomFilterCreationForm >> whenParametersValidationResultChangedDo: aBlock [
 	"Set a block to perform when the parameters validation result changed.
 	The block receives one argument with the new validation value as Boolean."
 	validationChangedBlock := aBlock

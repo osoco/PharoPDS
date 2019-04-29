@@ -1,5 +1,5 @@
 Class {
-	#name : #BloomFilterViewer,
+	#name : #PDSBloomFilterViewer,
 	#superclass : #ComposablePresenter,
 	#instVars : [
 		'bits',
@@ -10,7 +10,7 @@ Class {
 }
 
 { #category : #specs }
-BloomFilterViewer class >> defaultSpec [
+PDSBloomFilterViewer class >> defaultSpec [
 	^ SpecRowLayout composed
 		add: #bits;
 		addSplitter;
@@ -19,12 +19,12 @@ BloomFilterViewer class >> defaultSpec [
 ]
 
 { #category : #accessing }
-BloomFilterViewer >> bits [
+PDSBloomFilterViewer >> bits [
 	^ bits
 ]
 
 { #category : #api }
-BloomFilterViewer >> bloom: aBloomFilter [
+PDSBloomFilterViewer >> bloom: aBloomFilter [
 	bloom := aBloomFilter.
 	bits
 		roassalScript: [ :view :canvas | 
@@ -63,19 +63,19 @@ BloomFilterViewer >> bloom: aBloomFilter [
 ]
 
 { #category : #api }
-BloomFilterViewer >> extent [
+PDSBloomFilterViewer >> extent [
 	^ 800 @ 600
 ]
 
 { #category : #accessing }
-BloomFilterViewer >> fpp [
+PDSBloomFilterViewer >> fpp [
 	^ fpp
 ]
 
 { #category : #initialization }
-BloomFilterViewer >> initializeWidgets [
-	bits := self instantiate: RoassalViewer.
-	fpp := self instantiate: RoassalViewer.
+PDSBloomFilterViewer >> initializeWidgets [
+	bits := self instantiate: PDSRoassalViewer.
+	fpp := self instantiate: PDSRoassalViewer.
 	bits
 		labelText: 'Bloom Filter BitSet'. fpp
 		labelText: 'False-Positive Probability Curve'.
@@ -87,12 +87,12 @@ BloomFilterViewer >> initializeWidgets [
 ]
 
 { #category : #api }
-BloomFilterViewer >> refresh [ 	
+PDSBloomFilterViewer >> refresh [ 	
 	bits refresh.
 	fpp refresh.
 ]
 
 { #category : #api }
-BloomFilterViewer >> title [ 
+PDSBloomFilterViewer >> title [ 
 ^ 'Bloom Filter Viewer'
 ]

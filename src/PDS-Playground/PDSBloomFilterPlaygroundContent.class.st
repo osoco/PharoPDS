@@ -1,5 +1,5 @@
 Class {
-	#name : #BloomFilterPlaygroundContent,
+	#name : #PDSBloomFilterPlaygroundContent,
 	#superclass : #ComposablePresenter,
 	#instVars : [
 		'addAction',
@@ -11,7 +11,7 @@ Class {
 }
 
 { #category : #specs }
-BloomFilterPlaygroundContent class >> defaultSpec [
+PDSBloomFilterPlaygroundContent class >> defaultSpec [
 	^ SpecColumnLayout composed
 		newRow: [ :row | 
 			row
@@ -26,12 +26,12 @@ BloomFilterPlaygroundContent class >> defaultSpec [
 ]
 
 { #category : #accessing }
-BloomFilterPlaygroundContent >> addAction [
+PDSBloomFilterPlaygroundContent >> addAction [
 	^ addAction
 ]
 
 { #category : #api }
-BloomFilterPlaygroundContent >> bloom: aBloom [
+PDSBloomFilterPlaygroundContent >> bloom: aBloom [
 	self addAction bloom: aBloom.
 	self testAction bloom: aBloom.
 	bloomInspector := GlamourPresentationPresenter new
@@ -43,17 +43,17 @@ BloomFilterPlaygroundContent >> bloom: aBloom [
 ]
 
 { #category : #accessing }
-BloomFilterPlaygroundContent >> bloomInspector [
+PDSBloomFilterPlaygroundContent >> bloomInspector [
 	^ bloomInspector
 ]
 
 { #category : #initialization }
-BloomFilterPlaygroundContent >> extent [
+PDSBloomFilterPlaygroundContent >> extent [
 ^ 800 @ 600
 ]
 
 { #category : #initialization }
-BloomFilterPlaygroundContent >> initializePresenter [
+PDSBloomFilterPlaygroundContent >> initializePresenter [
 	addAction
 		whenActionChangedDo: [ :filter :element | 
 			filter add: element asByteArray.
@@ -70,11 +70,11 @@ BloomFilterPlaygroundContent >> initializePresenter [
 ]
 
 { #category : #initialization }
-BloomFilterPlaygroundContent >> initializeWidgets [
-	addAction := self instantiate: BloomFilterActionForm.
-	testAction := self instantiate: BloomFilterActionForm.
+PDSBloomFilterPlaygroundContent >> initializeWidgets [
+	addAction := self instantiate: PDSBloomFilterActionForm.
+	testAction := self instantiate: PDSBloomFilterActionForm.
 	bloomInspector := self newLabel.
-	viewer := self instantiate: BloomFilterViewer.
+	viewer := self instantiate: PDSBloomFilterViewer.
 	addAction
 		header: 'Add elements';
 		description: 'Write the text you want to add to the filter.';
@@ -95,16 +95,16 @@ BloomFilterPlaygroundContent >> initializeWidgets [
 ]
 
 { #category : #accessing }
-BloomFilterPlaygroundContent >> testAction [
+PDSBloomFilterPlaygroundContent >> testAction [
 	^ testAction
 ]
 
 { #category : #initialization }
-BloomFilterPlaygroundContent >> title [
+PDSBloomFilterPlaygroundContent >> title [
 ^ 'BloomFilter Playground Content'
 ]
 
 { #category : #accessing }
-BloomFilterPlaygroundContent >> viewer [
+PDSBloomFilterPlaygroundContent >> viewer [
 	^ viewer
 ]

@@ -1,5 +1,5 @@
 Class {
-	#name : #RoassalViewer,
+	#name : #PDSRoassalViewer,
 	#superclass : #ComposablePresenter,
 	#instVars : [
 		'label',
@@ -11,7 +11,7 @@ Class {
 }
 
 { #category : #specs }
-RoassalViewer class >> defaultSpec [
+PDSRoassalViewer class >> defaultSpec [
 	^ SpecColumnLayout composed
 		newRow: [ :row | row add: #label ] height: self labelHeight;
 		newRow: [ :row | row add: #visualization ];
@@ -19,12 +19,12 @@ RoassalViewer class >> defaultSpec [
 ]
 
 { #category : #api }
-RoassalViewer >> extent [
+PDSRoassalViewer >> extent [
 	^ 400 @ 400
 ]
 
 { #category : #initialization }
-RoassalViewer >> initializeWidgets [
+PDSRoassalViewer >> initializeWidgets [
 	label := self newLabel.
 	visualization := self instantiate: RoassalModel.
 	label
@@ -35,31 +35,31 @@ RoassalViewer >> initializeWidgets [
 ]
 
 { #category : #accessing }
-RoassalViewer >> label [
+PDSRoassalViewer >> label [
 	^ label
 ]
 
 { #category : #api }
-RoassalViewer >> labelText: anObject [
+PDSRoassalViewer >> labelText: anObject [
 	label label: anObject.
 ]
 
 { #category : #api }
-RoassalViewer >> refresh [
+PDSRoassalViewer >> refresh [
 	visualization refresh
 ]
 
 { #category : #api }
-RoassalViewer >> roassalScript: anObject [
+PDSRoassalViewer >> roassalScript: anObject [
 	visualization script: anObject.
 ]
 
 { #category : #api }
-RoassalViewer >> title [ 
+PDSRoassalViewer >> title [ 
 ^ 'Bloom Filter Bits'
 ]
 
 { #category : #accessing }
-RoassalViewer >> visualization [
+PDSRoassalViewer >> visualization [
 	^ visualization
 ]

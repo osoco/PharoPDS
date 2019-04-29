@@ -78,7 +78,7 @@ PDSAlgorithmsBrowser >> view [
 PDSAlgorithmsBrowser >> widgetFor: aData [
 	| cm |
 	aData  = 'Bloom Filter'
-		ifTrue: [ cm := self instantiate: BloomFilterPlayground.
+		ifTrue: [ cm := self instantiate: PDSBloomFilterPlayground.
 			^ cm ]
 		ifFalse: [ ^ self defaultView ]
 ]

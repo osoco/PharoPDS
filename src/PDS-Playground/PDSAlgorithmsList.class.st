@@ -19,7 +19,7 @@ PDSAlgorithmsList class >> defaultSpec [
 { #category : #'as yet unclassified' }
 PDSAlgorithmsList >> availablePlaygrounds [
 
- ^ AlgorithmPlayground allSubclasses
+ ^ PDSAlgorithmPlayground allSubclasses
 ]
 
 { #category : #accessing }

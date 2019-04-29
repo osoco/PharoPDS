@@ -1,5 +1,5 @@
 Class {
-	#name : #BloomFilterPlaygroundToolbar,
+	#name : #PDSBloomFilterPlaygroundToolbar,
 	#superclass : #ComposablePresenter,
 	#instVars : [
 		'bloom',
@@ -14,7 +14,7 @@ Class {
 }
 
 { #category : #specs }
-BloomFilterPlaygroundToolbar class >> defaultSpec [
+PDSBloomFilterPlaygroundToolbar class >> defaultSpec [
 	^ SpecColumnLayout composed
 		newRow: [ :row | 
 			row
@@ -28,17 +28,17 @@ BloomFilterPlaygroundToolbar class >> defaultSpec [
 ]
 
 { #category : #accessing }
-BloomFilterPlaygroundToolbar >> analysis [
+PDSBloomFilterPlaygroundToolbar >> analysis [
 	^ analysis
 ]
 
 { #category : #initialization }
-BloomFilterPlaygroundToolbar >> analyzeFilter [
+PDSBloomFilterPlaygroundToolbar >> analyzeFilter [
 	PDSBloomFilterAnalysis openFor: bloom.
 ]
 
 { #category : #initialization }
-BloomFilterPlaygroundToolbar >> benchmarkFilter [
+PDSBloomFilterPlaygroundToolbar >> benchmarkFilter [
 	| addOperationsPerSec testOperationsPerSec |
 	addOperationsPerSec := [ bloom add: bloom targetElements atRandom asByteArray ] bench.
 	testOperationsPerSec := [ bloom contains: bloom targetElements atRandom asByteArray ]
@@ -54,23 +54,23 @@ BloomFilterPlaygroundToolbar >> benchmarkFilter [
 ]
 
 { #category : #accessing }
-BloomFilterPlaygroundToolbar >> benchmarking [
+PDSBloomFilterPlaygroundToolbar >> benchmarking [
 	^ benchmarking
 ]
 
 { #category : #accessing }
-BloomFilterPlaygroundToolbar >> create [
+PDSBloomFilterPlaygroundToolbar >> create [
 	^ create
 ]
 
 { #category : #initialization }
-BloomFilterPlaygroundToolbar >> createBloomFilterWith: size andFpp: fpp [
+PDSBloomFilterPlaygroundToolbar >> createBloomFilterWith: size andFpp: fpp [
 	self onBloomFilterCreated: (PDSBloomFilter new: size fpp: fpp).
 	
 ]
 
 { #category : #initialization }
-BloomFilterPlaygroundToolbar >> initializePresenter [
+PDSBloomFilterPlaygroundToolbar >> initializePresenter [
 	create action: [ self openCreationForm ].
 	reset action: [ self resetBloomFilter ].
 	profile action: [ self profileFilter ].
@@ -79,7 +79,7 @@ BloomFilterPlaygroundToolbar >> initializePresenter [
 ]
 
 { #category : #initialization }
-BloomFilterPlaygroundToolbar >> initializeWidgets [
+PDSBloomFilterPlaygroundToolbar >> initializeWidgets [
 	create := self newButton.
 	analysis := self newButton.
 	profile := self newButton.
@@ -113,7 +113,7 @@ BloomFilterPlaygroundToolbar >> initializeWidgets [
 ]
 
 { #category : #initialization }
-BloomFilterPlaygroundToolbar >> onBloomFilterCreated: aBloomFilter [
+PDSBloomFilterPlaygroundToolbar >> onBloomFilterCreated: aBloomFilter [
 	bloom := aBloomFilter.
 	self reset enabled: true.
 	self analysis enabled: true.
@@ -123,14 +123,14 @@ BloomFilterPlaygroundToolbar >> onBloomFilterCreated: aBloomFilter [
 ]
 
 { #category : #initialization }
-BloomFilterPlaygroundToolbar >> onBloomFilterUpdated [
+PDSBloomFilterPlaygroundToolbar >> onBloomFilterUpdated [
 	creationBlock ifNotNil: [ creationBlock value: bloom ]
 ]
 
 { #category : #private }
-BloomFilterPlaygroundToolbar >> openCreationForm [
+PDSBloomFilterPlaygroundToolbar >> openCreationForm [
 | form dialog |
-			form := BloomFilterCreationForm new.
+			form := PDSBloomFilterCreationForm new.
 			dialog := form openDialogWithSpec.
 			form
 				whenParametersValidationResultChangedDo: [ :areValid | dialog okButtonEnabled: areValid ].
@@ -144,12 +144,12 @@ BloomFilterPlaygroundToolbar >> openCreationForm [
 ]
 
 { #category : #accessing }
-BloomFilterPlaygroundToolbar >> profile [
+PDSBloomFilterPlaygroundToolbar >> profile [
 	^ profile
 ]
 
 { #category : #initialization }
-BloomFilterPlaygroundToolbar >> profileFilter [
+PDSBloomFilterPlaygroundToolbar >> profileFilter [
 	TimeProfiler new
 		openOnBlock: [ 1000
 				timesRepeat:
@@ -158,16 +158,16 @@ BloomFilterPlaygroundToolbar >> profileFilter [
 ]
 
 { #category : #accessing }
-BloomFilterPlaygroundToolbar >> reset [
+PDSBloomFilterPlaygroundToolbar >> reset [
 	^ reset
 ]
 
 { #category : #initialization }
-BloomFilterPlaygroundToolbar >> resetBloomFilter [
+PDSBloomFilterPlaygroundToolbar >> resetBloomFilter [
 	self onBloomFilterCreated: (bloom reset)
 ]
 
 { #category : #'api - events' }
-BloomFilterPlaygroundToolbar >> whenBloomCreatedDo: aBlock [
+PDSBloomFilterPlaygroundToolbar >> whenBloomCreatedDo: aBlock [
 	creationBlock := aBlock
 ]

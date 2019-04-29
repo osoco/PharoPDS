@@ -3,19 +3,19 @@
 
 The purpose of PharoPDS is to provide some """"probabilistic data structures and algorithms"""" implemented in Pharo.
 
-''Probabilistic data structures'' is a common name for data structures based mostly on different hashing techniques. Unlike regular and deterministic data strcutures, they always provide approximated answers but with reliable ways to estimate possible errors.
+''Probabilistic data structures'' is a common name for data structures based mostly on different hashing techniques. Unlike regular and deterministic data structures, they always provide approximated answers but with reliable ways to estimate possible errors.
 
-Fortunately, the potential losses and errors are fully compensated for by extremely low memory requirements, constant query time, and scaling. All these factors make these structures relevant in ''Big Data'' applications.
+The potential losses and errors are fully compensated for by extremely low memory requirements, constant query time, and scaling. All these factors make these structures relevant in ''Big Data'' applications.
 
 !!Data Structures
 
-Currently, PharoPDS provides  probabilistic data structures for the following problem categories:
+Currently, PharoPDS provides  probabilistic data structures for the following categories of problems:
 
 !!! Membership
 
-A 'membership problem' for a dataset is a task to decide whether some element belongs to the dataset or not.
+A ''membership problem'' for a dataset is a task to decide whether some elements belongs to the dataset or not.
 
-The data structures provided to solve the membership problem are:
+The data structures provided to solve the membership problem are the following:
 
  - """"Bloom Filter"""": Learn more about it in ${class:PDSBloomFilter}$
 
@@ -27,7 +27,10 @@ This is still a work in progress.
 
 !!Algorithms Browser
 
-Try the PharoPDS Algorithms Browser:
+In order to ease the understanding of the inner workings and trade-offs,  we provide specific Playground tools for each data structure that allows the developer to explore it and get deeper insights.
+
+You can browse the available algorithm playgrounds throgh the """"PharoPDS Algorithms Browser"""". Try it now:
+
 [[[ 
 PDSAlgorithmsBrowser open 
 ]]]

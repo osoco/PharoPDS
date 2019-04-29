@@ -1,5 +1,5 @@
 Class {
-	#name : #BloomFilterActionForm,
+	#name : #PDSBloomFilterActionForm,
 	#superclass : #ComposablePresenter,
 	#instVars : [
 		'header',
@@ -14,7 +14,7 @@ Class {
 }
 
 { #category : #specs }
-BloomFilterActionForm class >> defaultSpec [
+PDSBloomFilterActionForm class >> defaultSpec [
 	^ SpecColumnLayout composed
 		add: #header;
 		add: #description;
@@ -26,55 +26,55 @@ BloomFilterActionForm class >> defaultSpec [
 ]
 
 { #category : #api }
-BloomFilterActionForm >> bloom: anObject [
+PDSBloomFilterActionForm >> bloom: anObject [
 	bloom := anObject.
 	 self resultLabel: ''
 ]
 
 { #category : #accessing }
-BloomFilterActionForm >> button [
+PDSBloomFilterActionForm >> button [
 	^ button
 ]
 
 { #category : #api }
-BloomFilterActionForm >> buttonLabel: aString [
+PDSBloomFilterActionForm >> buttonLabel: aString [
 	button label: aString
 ]
 
 { #category : #accessing }
-BloomFilterActionForm >> description [
+PDSBloomFilterActionForm >> description [
 	^ description
 ]
 
 { #category : #api }
-BloomFilterActionForm >> description: aString [
+PDSBloomFilterActionForm >> description: aString [
 	description label: aString
 ]
 
 { #category : #api }
-BloomFilterActionForm >> ghostText: aString [
+PDSBloomFilterActionForm >> ghostText: aString [
 	input ghostText: aString
 ]
 
 { #category : #accessing }
-BloomFilterActionForm >> header [
+PDSBloomFilterActionForm >> header [
 	^ header
 ]
 
 { #category : #api }
-BloomFilterActionForm >> header: aString [
+PDSBloomFilterActionForm >> header: aString [
 	header label: aString.
 ]
 
 { #category : #initialization }
-BloomFilterActionForm >> initializePresenter [
+PDSBloomFilterActionForm >> initializePresenter [
 	button
 		action: [
 			self performAction ]
 ]
 
 { #category : #initialization }
-BloomFilterActionForm >> initializeWidgets [
+PDSBloomFilterActionForm >> initializeWidgets [
 	header := self newLabel.
 	description := self newLabel.
 	input := self newTextInput autoAccept: true.
@@ -96,12 +96,12 @@ BloomFilterActionForm >> initializeWidgets [
 ]
 
 { #category : #accessing }
-BloomFilterActionForm >> input [
+PDSBloomFilterActionForm >> input [
 	^ input
 ]
 
 { #category : #actions }
-BloomFilterActionForm >> performAction [
+PDSBloomFilterActionForm >> performAction [
 	| resultValue |
 	resultValue := actionBlock value: bloom value: input text.
 	input text: ''.
@@ -109,16 +109,16 @@ BloomFilterActionForm >> performAction [
 ]
 
 { #category : #accessing }
-BloomFilterActionForm >> result [
+PDSBloomFilterActionForm >> result [
 	^ result
 ]
 
 { #category : #api }
-BloomFilterActionForm >> resultLabel: aString [
+PDSBloomFilterActionForm >> resultLabel: aString [
 	result label: aString
 ]
 
 { #category : #'api - events' }
-BloomFilterActionForm >> whenActionChangedDo: aBlock [
+PDSBloomFilterActionForm >> whenActionChangedDo: aBlock [
 	actionBlock := aBlock
 ]
