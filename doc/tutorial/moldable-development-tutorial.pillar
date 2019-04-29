@@ -1,0 +1,29 @@
+! Moldable Development applied to Bloom filters
+
+In this tutorial we learn how to extend the moldable IDE in Pharo with custom views and tools for the ""Bloom Filter"" implementation provided by the project ""PharoPDS"".
+
+The views for an instance of ==PDSBloomFilter== are the default for any object, ==Raw== and ==Meta==:
+
+[[[
+(PDSBloomFilter new: 10 fpp: 0.03) inspect
+]]]
+
+!! Custom extensions for the "classic" Inspector
+
+We are going to write a simple example returning an empty Bloom filter to be used in our workshop:
+
+${changes:01-create-empty-example}$
+
+Now we can build a new empty Bloom filter running the previous example:
+
+${example:PDSWBloomFilterExamples>>#emptyFilter}$
+
+The first exercise consists of creating a simple custom extension for the Bloom filter instances in order to show their key parameters when they are shown by the Inspector:
+
+${changes:01-inspector-parameters-extension}$
+
+Now, if you inspect the same Bloom filter instance we created previously you should see a table containing the key parameters for the filter:
+
+[[[
+(PDSBloomFilter new: 10 fpp: 0.03) inspect
+]]]
