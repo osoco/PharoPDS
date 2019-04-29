@@ -1,3 +1,3 @@
-# Pharo Probabilistic Data Structures
+# PharoPDS
 
 Probabilistic data structures implemented in Pharo.
