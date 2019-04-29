@@ -10,7 +10,7 @@ To install PharoPDS on your Pharo image you can just execute the following scrip
 
 ```Smalltalk
     Metacello new
-      baseline: #ProbabilisticDataStructures
+      baseline: #ProbabilisticDataStructures;
     	repository: 'github://osoco/PharoPDS:master/src';
     	load
 ```
@@ -20,7 +20,7 @@ You can optionally install all the custom extensions and interactive tutorials i
 
 ```Smalltalk
     Metacello new
-      baseline: #ProbabilisticDataStructures
+      baseline: #ProbabilisticDataStructures;
     	repository: 'github://osoco/PharoPDS:master/src';
     	load: 'All'
 ```
