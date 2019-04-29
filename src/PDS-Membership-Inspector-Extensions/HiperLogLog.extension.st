@@ -101,7 +101,7 @@ HiperLogLog >> makeBucketElementsAt: aCountersPosition inView: aView [
 					aCountersPosition = tempCounterPosition
 						ifTrue: [ value > tempRank
 								ifTrue: [ element asString , ' dont change. Current Value > Temp Rank' ]
-								ifFalse: [ element asString , ' change. Current Value >= Temp Rank' ] ]
+								ifFalse: [ element asString , ' change. Current Value <= Temp Rank' ] ]
 						ifFalse: [ element asString ] ]).
 	aView add: bucketElement.
 	^ bucketElement
