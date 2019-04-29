@@ -39,7 +39,7 @@ HiperLogLog >> gtInspectorPipelineIn: composite [
 			hashFunctionElement := self makeHashFunctionElementInView: v.
 			hashValueElement := self makeHashValueElementInView: v.
 			countersElement := self makeCountersElementInView: v.
-			hashFunctionElement translateBy: 0@120.
+			hashFunctionElement translateBy: 0 @ 120.
 			hashValueElement translateBy: 0 @ 240.
 			countersElement translateBy: 0 @ 360.
 			totalElements := RTGroup new.
@@ -47,14 +47,13 @@ HiperLogLog >> gtInspectorPipelineIn: composite [
 				add: countersElement;
 				add: hashValueElement;
 				add: objectElement;
-				add: hashFunctionElement .
+				add: hashFunctionElement.
 			self
 				arrowedAssociation: objectElement
-				to: hashFunctionElement 
+				to: hashFunctionElement
 				inView: v.
-
 			self
-				arrowedAssociation: hashFunctionElement 
+				arrowedAssociation: hashFunctionElement
 				to: hashValueElement
 				inView: v.
 			self
@@ -72,7 +71,7 @@ HiperLogLog >> gtInspectorPipelineIn: composite [
 					(RTLine new
 						color: (Color blue alpha: 0.4);
 						edgeFrom: (v elementFromModel: 'Bucket ' , tempCounterPosition asString)
-							to: (v elementFromModel: 'Rest Bits')).
+							to: (v elementFromModel: tempRank)).
 			v ]
 ]
 
@@ -95,8 +94,15 @@ HiperLogLog >> makeBucketElementsAt: aCountersPosition inView: aView [
 			(RTLabel
 				color: Color black;
 				text: value) elementOn: 'Bucket ' , aCountersPosition asString.
-
-	bucketElement @ RTPopup.
+	bucketElement
+		@
+			(RTPopup
+				text: [ :element | 
+					aCountersPosition = tempCounterPosition
+						ifTrue: [ value > tempRank
+								ifTrue: [ element asString , ' dont change. Current Value > Temp Rank' ]
+								ifFalse: [ element asString , ' change. Current Value >= Temp Rank' ] ]
+						ifFalse: [ element asString ] ]).
 	aView add: bucketElement.
 	^ bucketElement
 ]
@@ -159,9 +165,10 @@ HiperLogLog >> makeHashFunctionElementInView: aView [
 
 { #category : #'*PDS-Membership-Inspector-Extensions' }
 HiperLogLog >> makeHashIndexBitsElementsInView: aView [
-	| indexBitsElement |
+	| indexBitsElement  |
 	indexBitsElement := (RTBox + (RTLabel new text: 'Index Bits')
-		borderColor: Color red trans) elementsOn: (Array with: tempCounterPosition).
+		borderColor: Color red trans)
+		elementsOn: (Array with: tempCounterPosition).
 	aView addAll: indexBitsElement.
 	RTNest new
 		for: indexBitsElement
@@ -170,16 +177,17 @@ HiperLogLog >> makeHashIndexBitsElementsInView: aView [
 				[ :i | group add: (self makeHashBitElementAt: i inView: aView) @ RTPopup ].
 			RTHorizontalLineLayout on: group ].
 	RTHorizontalLineLayout new on: indexBitsElement.
-	indexBitsElement @ RTPopup.
+
+	indexBitsElement @ (RTPopup
+				text: [ :element | 'Bucket= Value Index Bits+1=' , element asString ]).
 	^ indexBitsElement
 ]
 
 { #category : #'*PDS-Membership-Inspector-Extensions' }
 HiperLogLog >> makeHashRestBitsElementsInView: aView [
 	| restBitsElement |
-	restBitsElement := (RTBox  + RTLabel new
-		borderColor: Color red trans)
-		elementsOn: #('Rest Bits').
+	restBitsElement := (RTBox + (RTLabel new text: 'Rest Bits')
+		borderColor: Color red trans) elementsOn: (Array with: tempRank).
 	aView addAll: restBitsElement.
 	RTNest new
 		for: restBitsElement
@@ -188,7 +196,9 @@ HiperLogLog >> makeHashRestBitsElementsInView: aView [
 				[ :i | group add: (self makeHashBitElementAt: i inView: aView) @ RTPopup ].
 			RTHorizontalLineLayout on: group ].
 	RTHorizontalLineLayout new on: restBitsElement.
-	restBitsElement @ RTPopup.
+	restBitsElement
+		@ "RTPopup ."
+			(RTPopup text: [ :element | 'Rank of Rest Bits=' , element asString ]).
 	^ restBitsElement
 ]
 
