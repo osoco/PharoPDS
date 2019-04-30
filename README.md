@@ -2,7 +2,7 @@
 
 Probabilistic data structures implemented in Pharo.
 
-PharoPDS is written and supported by Rafael Luque and other developers at [OSOCO](https://osoco.es).
+PharoPDS is written and supported by developers at [OSOCO](https://osoco.es).
 
 ## Install PharoPDS
 
