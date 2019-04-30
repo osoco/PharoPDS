@@ -135,7 +135,7 @@ PDSBloomFilterAnalysis openFor: (PDSBloomFilter new: 100 fpp: 0.03)
 
 A Bloom filter only requires a fixed number of ==k== probes, so each insertion and search can be processed in ==O(k)== time, which is considered constant.
 
-For instance, the following code will run a microbenchmark on the search operation for a Bloom filter previously populated with 10 elements and will show the number of operations executed per basicYear:  month:  day:  hour:  minute:  second:  nanoSecond:  offset: 
+For instance, the following code will run a microbenchmark on the search operation for a Bloom filter previously populated with 10 elements and will show the number of operations executed per second:
 
 [[[
 | bloom |
@@ -175,7 +175,7 @@ set := OrderedCollection new: 1000000.
 
 PharoPDS provides a simple tool for the Bloom filter in order to allow you to explore and play with this data structure.
 
-The """"PDSBloomFilterPlayground"" allows you to create Bloom filters to play with their operations and visualize them. You can event run benchmarking and profiling them from the UI.
+The """"PDSBloomFilterPlayground"""" allows you to create Bloom filters to play with their operations and visualize them. You can event run benchmarking and profiling them from the UI.
 
 Let's play with the playground:
 
