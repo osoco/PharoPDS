@@ -35,7 +35,7 @@ To add PharoPDS to your own project's baseline just add this:
     	with: [ spec repository: 'github://osoco/PharoPDS:master/src' ]
 ```
 
-Note that you can replace the #master by another branch or a tag.
+Note that you can replace the *master* by another branch or a tag.
 
 ## Data Structures
 
@@ -55,6 +55,20 @@ This is still a work in progress.
 
  - **HyperLogLog**
 
+## Moldable development
+
+This library has been develop trying to apply the ideas after the **moldable development** approach, so you can expect that each data structure provides its own custom and domain-specific extensions in order to ease the understanding and learning by the developers.
+
+For instance, the following pictures are some of the extensions provided by the Bloom filter:
+
+![Inspector on Bloom Filter - Parameters tab](doc/images/bloom-params-extension.png)
+
+![Inspector on Bloom Filter - FPP tab](doc/images/bloom-fpp-extension.png)
+
+![Inspector on Bloom Filter - Bits tab](doc/images/bloom-bits-extension.png)
+
+![Inspector on Bloom Filter - Analysis](doc/images/bloom-analysis.png)
+
 ## Algorithms Browser
 
 In order to ease the understanding of the inner workings and trade-offs, we provide specific *Playground* tools for each data structure that allows the developer to explore it and get deeper insights.
@@ -64,3 +78,15 @@ You can browse the available algorithm playgrounds through the **PharoPDS Algori
 ```Smalltalk
 PDSAlgorithmsBrowser open 
 ```
+
+![PDS Algorithms Browser](doc/images/algorithms-browser.png)
+
+## License
+
+PharoPDS is written and supported by developers at **[OSOCO](https://osococo.es)** and published as **free and open source** software  under an **MIT license**.
+
+## Project dependencies
+
+Hashing plays a central role in probabilistic data structures. Indeed, the choice of the appropiate hash functions is crucial to avoid bias and to reach a good performance. In particular, the structures require **non-cryptographic hash functions** that are provided by the dependency module **[NonCryptographicHashes](https://github.com/osoco/pharo-non-cryptographic-hashes)**.
+
+Other dependencies like **Roassal** or **GToolkit** are optional for production use. Nevertheless, we recommend that you install them in the development image if you want to get some useful tools like Inspector custom extensions, the algorithm browser or interactive tutorials.
