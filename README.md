@@ -67,7 +67,7 @@ For instance, the following pictures are some of the extensions provided by the 
 
 ![Inspector on Bloom Filter - Bits tab](doc/images/bloom-bits-extension.png)
 
-![Inspector on Bloom Filter - Analysis](doc/images/bloom-analysis-extension.png)
+![Inspector on Bloom Filter - Analysis](doc/images/bloom-analysis.png)
 
 ## Algorithms Browser
 
