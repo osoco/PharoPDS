@@ -7,13 +7,30 @@ A Bloom filter is a space-efficient probabilistic data structure, conceived by "
 
 A regular ''hash-based search'' stores the full set of values from a collection in a hash table, whether in linked lists or using ''open addressing''. In both cases, as more elements are added to the hash table, the time to locate an element increases, degenerating the expected time performance from the initial constant ==O(1)== to the lineal ==O(N)==.
 
-A """"Bloom Filter"""" provides an alternative structure that ensures """"constant performance"""" when adding elements or checking an element membership. This behaviour is independent of the number of items already added to the filter.
+A """"Bloom Filter"""" provides an alternative structure that ensures """"constant performance"""", both in space and time, when adding elements or checking an element membership. This behaviour is independent of the number of items already added to the filter.
+
+!! Context
+
+''Donald Knuth'' in his famous ''The Art of Computer Programming'' writes the following about Bloom filters: 
+
+""Imagine a search application with a large database in which no calculation needs to be done if the search was unsucessful. For example, we might want to check somebody's credit rating or passport number, and if no record for that person appears in the file we don't have to investigate further. Similarly in an application to computerized typesetting, we might have a simple algorithm that hyphenates most words correctly, but it fails on some 50,000 exception words; if we don't find the word in the exception file we are free to use the simple algorithm.""
+
+Also ''Broder'' and ''Mitzenmacher'' stablished the following principle:
+
+""Whenever a list or set is used, and space is at a premium, consider using a Bloom filter if the effect of false positives can be mitigated.""
+
+!! Examples from the Real World^^tm^^
+
+- Medium uses Bloom filters to avoid recommending articles a user has previously read.
+- Google Chrome uses a Bloom filter to identify malicious URLs.
+- Google BigTable, Apache HBase and Apache Cassandra use Bloom filters to reduce the disk lookups for non-existing rows or columns.
+- The Squid Web proxy uses Bloom filters for cache digests.
 
 !! Basic understanding
 
 The Bloom Filter can store a large set very efficiently by discarding the identity of the elements; i.e. it stores only a set of bits corresponding to some number of """"hash functions"""" that are applied to each added element by the algorithm.
 
-Practically, the Bloom Filter is represented by a bit array and can be described by its length ==m== and number of different hash functions ==k==.
+Practically, the Bloom Filter is represented by a bit array and can be described by its length (==m==) and number of different hash functions (==k==).
 
 The structure supports only two operations:
   - Adding and element into the set, and
@@ -21,7 +38,7 @@ The structure supports only two operations:
 
 The Bloom Filter data structure is a bit array where at the beginning all bits are equal to zero, meaning the filter is empty.
 
-For example, consider the following Bloom filter example created to represent a set of 10 elements with a """"false positive probability"""" ==FPP=0.1== (i.e. 10%).
+For example, consider the following Bloom filter example created to represent a set of 10 elements with a """"false positive probability"""" (==FPP==) of ==0.1== (i.e. 10%).
 
 This empty filter will be backed by a bit array of length ==m=48== (==storageSize==) and 4 hash functions to produce values in the range =={1, 2, ..., m}==. It has the following form:
 
@@ -30,13 +47,13 @@ ${example:PDSBloomFilterExamples>>#emptyBloomFilter|previewShow=#gtStorageBitSet
 
 To insert an element ==x== into the filter, for every hash function ==h@@i@@==  we compute its value ==j=h@@i@@(x)== on the element ==x== and set the corresponding bit ==j== in the filter to one.
 
-As an example, we are going to insert the names of cities into the previous filter. Let's start with """"Madrid"""":
+As an example, we are going to insert some names of cities into the previous filter. Let's start with """"Madrid"""":
 
 ${example:PDSBloomFilterExamples>>#withMadridBloomFilter|previewShow=#gtStorageBitSetViewFor:|previewHeight=250}$
 
 In order to find the corresponding bits to be set for =='Madrid'==, the filter computes the corresponding 4 hash values. As you see above, the filter has set the bits 9, 18, 39 and 48.
 
-It is possible that different elements can share bits, for instance, let's add another city, """"Barcelona"""", to the filter:
+It is possible that different elements can share bits, for instance, let's add another city, """"Barcelona"""", to the same filter:
 
 ${example:PDSBloomFilterExamples>>#withMadridAndBarcelonaBloomFilter|previewShow=#gtStorageBitSetViewFor:|previewHeight=250}$
 
@@ -46,7 +63,7 @@ To test if a given element ==x== is in the filter, all ==k== hash functions are 
 
 The uncertainty about the element's existence originates from the possibility of situations when some bits are set by different elements added previously.
 
-Consider the previous Bloom filter example with the elements =='Madrid'== and =='Barcelona'== added. To test if the element =='Barcelona'== is a member, the filter computes its 4 hash values and check that the corresponding bits in the filter are set to one, therefore the String =='Barcelona'== may exists in the filter and the ==contains: 'Barcelona'== returns ==true==:
+Consider the previous Bloom filter example with the elements =='Madrid'== and =='Barcelona'== already added. To test if the element =='Barcelona'== is a member, the filter computes its 4 hash values and check that the corresponding bits in the filter are set to one, therefore the String =='Barcelona'== may exists in the filter and the ==contains: 'Barcelona'== returns ==true==:
 
 ${example:PDSBloomFilterExamples>>#withMadridAndBarcelonaCheckBarcelonaBloomFilter}$
 
@@ -59,11 +76,11 @@ We see that the bits 27 and 33 aren't set, therefore the """"Berlin"""" element 
 
 ${example:PDSBloomFilterExamples>>#withMadridAndBarcelonaCheckBerlinBloomFilter}$
 
-A Blool filter can also result in a false positive result. For example, consider the element """"Roma"""", whose 4 hash values collision in the bit 36 that is set in the filter, so the result of the contains method is that the element may exist in the filter:
+A Blool filter can also result in a false positive result. For example, consider the element """"Roma"""", whose 4 hash values collision in the bit 36 that is already set in our filter example, so the result of the contains method is that the element may exist in the filter:
 
 ${example:PDSBloomFilterExamples>>#withMadridAndBarcelonaCheckRomaBloomFilter}$
 
-As we know, we have not added that element and this is an example of a false positive. In this particular case, the bit 36 was set previously by the """"Barcelona"""" element.
+As we know, we have not added that element to the filter, so this is an example of a false positive event. In this particular case, the bit 36 was set previously by the """"Barcelona"""" element.
 
 !! Properties
 
@@ -75,11 +92,11 @@ Fortunately, a Bloom filter has a predictable false positive probability (==FPP=
 
 ${icebergFile:path=osoco/PharoPDS/doc/images/pfp_formula.png|expanded=true|height=100|show=#gtFigureFor:}$
 
-where ==n== is the number of values already added, ==k== the number of hashes and ==m== the length of the filter (i.e. the bit array size).
+where """"==n=="""" is the number of values already added, """"==k=="""" the number of hashes and """"==m=="""" the length of the filter (i.e. the bit array size).
 
 In the extreme case, when the filter is full every lookup will yield a (false) positive response. It means that the choice of ==m== depends on the estimated number of elements ==n== that are expected to be added, and ==m== should be quite large compared to ==n==.
 
-In practice, the length of the filter ==m==, under given false positive probability ==Pfp== and the expected number of elements ==n==, can be determined by the formula:
+In practice, the length of the filter ==m==, under given false positive probability ==FPP== and the expected number of elements ==n==, can be determined by the formula:
 
 ${icebergFile:path=osoco/PharoPDS/doc/images/m_formula.png|expanded=true|height=100|show=#gtFigureFor:}$
 
@@ -113,17 +130,17 @@ For example, for a just created and still empty Bloom filter the data structure 
 
 ${example:PDSBloomFilterExamples>>#emptyBloomFilter|previewShow=#gtFPPCurveFor:|previewHeight=450}$
 
-As you add elements to the filter the ==fpp== is increased and will be the target fpp when the filter reach the expected number of elements: 
+As you add elements to the filter the ==fpp== is increased and will be equals the target fpp when the filter reach the expected number of elements: 
 
 ${example:PDSBloomFilterExamples>>#fullBloomFilter|previewShow=#gtFPPCurveFor:|previewHeight=450}$
 
-Nevertheless, you should know that the previou """"FPP curve"""" is a theoretical value and the """"actual FPP"""" observed will depend on the specific dataset you work with. In order to check empirically the goodness of our implementation we have run the following analysis:
+Nevertheless, you should know that the previou """"FPP curve"""" is a theoretical value and the """"actual FPP"""" observed will depend on the specific dataset and hash functions you work with. In order to check empirically the goodness of our implementation we have run the following analysis:
 
-    -# Randomly generate a list of email addresses which are inserted in the Bloom filter.
-    -# Randomly generate a list of email addresses not inserted in the filter.
-    -# Count the false positive events when searching for the missing addresses.
+    1. Randomly generate a list of email addresses which are insert them in the Bloom filter.
+    2. Randomly generate a list of email addresses not inserted in the filter.
+    3. Count the false positive events when searching for the missing addresses in the filter.
 
-We ran the experiment for values from 10 to 1.5 times the expected number of elements of the filter (with steps of 10). For each number of elements the experiment is ran 10 times. The analysis shows a graph depicting the theoretical FPP curve of the filter, the actual FPP values measured in each experiment, the actual FPP curve (average of the actual FPP values) and the standard deviation.
+We ran the experiment for values from 10 to 1.5 times the expected number of elements of the filter (with steps of 10). For each number of elements the experiment is ran 10 times. The analysis shows a graph depicting the theoretical FPP curve of the filter (blue line), the average FPP values measured in each experiment (grey crosses), the actual FPP curve (red line) and the standard deviation (red shade).
 
 For instance, the following graph shows the resulting analysis for a Bloom filter with 100 elements and FPP equals to 3%:
 
@@ -144,7 +161,7 @@ bloom := PDSBloomFilter new: 1000000 fpp: 0.03.
 [ bloom contains: 'no-member' asByteArray  ] bench.
 ]]]
 
-As the performance is constant, the result should be similar in the folling case with the same Bloom filter with 1 million elements previously added: 
+As the performance is constant, the result should be similar in the following case with the same Bloom filter containing 1 million elements previously added: 
 
 [[[
 | bloom |
@@ -153,7 +170,7 @@ bloom := PDSBloomFilter new: 1000000 fpp: 0.03.
 [ bloom contains: 'no-member' asByteArray  ] bench.
 ]]]
 
-A naive implementation based on a Collection data structure will show a linear ==O(n)== performance, or in the best case of an ordered collection, a logarithmic ==O(log n)== performance. In the following benchmarks you can check as the behaviour degrades whith the size of the collection (n):
+A naive implementation based on a Collection data structure will show a linear ==O(n)== performance, or in the best case of an ordered collection, a logarithmic ==O(log n)== performance. In the following benchmarks you can check as the behaviour using an ==OrderedCollection== degrades whith the size of the collection (n):
 
 [[[
 | set |
@@ -175,7 +192,7 @@ set := OrderedCollection new: 1000000.
 
 PharoPDS provides a simple tool for the Bloom filter in order to allow you to explore and play with this data structure.
 
-The """"PDSBloomFilterPlayground"""" allows you to create Bloom filters to play with their operations and visualize them. You can event run benchmarking and profiling them from the UI.
+The """"PDSBloomFilterPlayground"""" allows you to create Bloom filters to play with their operations and visualize them. You can even run benchmarking and profiling them from the UI.
 
 Let's play with the playground:
 
@@ -183,22 +200,7 @@ Let's play with the playground:
 PDSBloomFilterPlayground open
 ]]]
 
-!! Context
-
-''Donald Knuth'' in his famous 'The Art of Computer Programming' writes the following about Bloom filters: 
-
-""Imagine a search application with a large database in which no calculation needs to be done if the search was unsucessful. For example, we might want to check somebody's credit rating or passport number, and if no record for that person appears in the file we don't have to investigate further. Similarly in an application to computerized typesetting, we might have a simple algorithm that hyphenates most words correctly, but it fails on some 50,000 exception words; if we don't find the word in the exception file we are free to use the simple algorithm.""
-
-Also ''Broder'' and ''Mitzenmacher'' stablished the following principle:
-
-""Whenever a list or set is used, and space is at a premium, consider using a Bloom filter if the effect of false positives can be mitigated.""
-
-!! Examples from the Real World^^tm^^
-
-- Medium uses Bloom filters to avoid recommending articles a user has previously read.
-- Google Chrome uses a Bloom filter to identify malicious URLs.
-- Google BigTable, Apache HBase and Apache Cassandra use Bloom filters to reduce the disk lookups for non-existing rows or columns.
-- The Squid Web proxy uses Bloom filters for cache digests.
+!!
 
 
 "

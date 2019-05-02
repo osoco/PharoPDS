@@ -35,6 +35,11 @@ You can browse the available algorithm playgrounds throgh the """"PharoPDS Algor
 PDSAlgorithmsBrowser open 
 ]]]
 
+!!Moldable development
+
+This library has been develop trying to apply the ideas after the ''moldable development'' approach, so you can expect that each data structure provides its own custom domain-specific extensions in order to ease the understanding and learning by the developers.
+
+
 !!License
 
 PharoPDS software is free and open source under an """"MIT license"""".
