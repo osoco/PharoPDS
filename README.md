@@ -79,6 +79,8 @@ You can browse the available algorithm playgrounds through the **PharoPDS Algori
 PDSAlgorithmsBrowser open 
 ```
 
+![PDS Algorithms Browser](doc/images/algorithms-browser.png)
+
 ## License
 
 PharoPDS is written and supported by developers at **[OSOCO](https://osococo.es)** and published as **free and open source** software  under an **MIT license**.
