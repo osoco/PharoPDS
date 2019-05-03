@@ -57,7 +57,7 @@ This is still a work in progress.
 
 ## Moldable development
 
-This library has been develop trying to apply the ideas after the **moldable development** approach, so you can expect that each data structure provides its own custom and domain-specific extensions in order to ease the understanding and learning by the developers.
+This library has been developed trying to apply the ideas after the **moldable development** approach, so you can expect that each data structure provides its own custom and domain-specific extensions in order to ease the understanding and learning by the developers.
 
 For instance, the following pictures are some of the extensions provided by the Bloom filter:
 
