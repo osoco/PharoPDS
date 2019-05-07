@@ -1,0 +1,16 @@
+SmalltalkCISpec {
+  #loading : [
+    SCIMetacelloLoadSpec {
+      #baseline : 'ProbabilisticDataStructures',
+      #directory : 'src',
+      #platforms : [ #pharo ]
+    }
+  ],
+  #testing : {
+    #coverage : {
+      #packages : [ 'PDS-Core' ],
+      #onWarningLog : true,
+      #useLatestMetacello : true
+    }
+  }
+}
