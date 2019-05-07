@@ -1,5 +1,8 @@
 # PharoPDS
 
+[![Build Status](https://travis-ci.org/osoco/PharoPDS.svg?branch=master)](https://travis-ci.org/osoco/PharoPDS)
+
+
 The purpose of PharoPDS is to provide some **probabilistic data structures and algorithms** implemented in Pharo.
 
 ''Probabilistic data structures'' is a common name for data structures based mostly on different hashing techniques. Unlike regular and deterministic data structures, they always provide approximated answers but with reliable ways to estimate possible errors.
