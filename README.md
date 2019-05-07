@@ -1,7 +1,7 @@
 # PharoPDS
 
 [![Build Status](https://travis-ci.org/osoco/PharoPDS.svg?branch=master)](https://travis-ci.org/osoco/PharoPDS)
-
+[![Coverage Status](https://coveralls.io/repos/github/osoco/PharoPDS/badge.svg?branch=master)](https://coveralls.io/github/osoco/PharoPDS?branch=master)
 
 The purpose of PharoPDS is to provide some **probabilistic data structures and algorithms** implemented in Pharo.
 
