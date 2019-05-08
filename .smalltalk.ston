@@ -8,7 +8,7 @@ SmalltalkCISpec {
   ],
   #testing : {
     #coverage : {
-      #packages : [ 'PDS-Core*' ],
+      #packages : [ 'PDS-Core-Membership' ],
       #onWarningLog : true,
       #useLatestMetacello : true
     }
