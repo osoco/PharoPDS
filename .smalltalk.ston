@@ -8,7 +8,8 @@ SmalltalkCISpec {
   ],
   #testing : {
     #coverage : {
-      #packages : [ 'PDS-Core-Collections' , 'PDS-Core-Membership' , 'PDS-Core-Tests' ],
+      //#packages : [ 'PDS-Core-Collections' , 'PDS-Core-Membership' , 'PDS-Core-Tests' ],
+      # classes : [#PDSBitArray , #PDSBloomFilter, #PDSBloomFilterAnalysis, #BloomFilterTest]
       #onWarningLog : true,
       #useLatestMetacello : true
     }
