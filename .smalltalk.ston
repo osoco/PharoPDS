@@ -9,7 +9,7 @@ SmalltalkCISpec {
   #testing : {
     #coverage : {
       
-      # classes : [#PDSBitArray , #PDSBloomFilter, #PDSBloomFilterAnalysis, #BloomFilterTest]
+      # classes : [#PDSBitArray , #PDSBloomFilter, #PDSBloomFilterAnalysis, #BloomFilterTest],
       #onWarningLog : true,
       #useLatestMetacello : true
     }
