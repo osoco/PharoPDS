@@ -13,7 +13,7 @@ The purpose of PharoPDS is to provide some **probabilistic data structures and a
 
 The potential losses and errors are fully compensated for by extremely low memory requirements, constant query time, and scaling. All these factors make these structures relevant in ''Big Data'' applications.
 
-We've written some posts about the library and the historical and intellectual background of some ideas behind the approach wi have followed:
+We've written some posts about the library and the historical and intellectual background of some ideas behind the approach we have followed:
 
 - [Understanding Bloom filters with Pharo Smalltalk](https://osoco.es/thoughts/2019/05/understanding-bloom-filters-with-pharo-smalltalk/)
 - [Designing media for thought with moldable development](https://osoco.es/thoughts/2019/05/designing-media-for-thought-with-moldable-development/)
