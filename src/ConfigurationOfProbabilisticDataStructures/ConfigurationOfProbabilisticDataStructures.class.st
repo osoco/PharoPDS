@@ -181,12 +181,11 @@ ConfigurationOfProbabilisticDataStructures >> version100: spec [
 	<version: '1.0.0'>
 	spec
 		for: #common
-		do: [ 
-			spec
+		do: [ spec
 				blessing: #stable;
 				author: 'Rafael Luque, Javier Luque, and other OSOCO developers';
 				description: 'Probabilistic Data Structures for Pharo'.
 			spec
 				baseline: 'ProbabilisticDataStructures'
-				with: [ spec repository: 'github://osoco/PharoPDS:1.0.0/src' ] ]
+				with: [ spec repository: 'github://osoco/PharoPDS:v1.0.0/src' ] ]
 ]
