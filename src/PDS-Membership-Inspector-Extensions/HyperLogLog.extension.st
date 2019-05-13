@@ -1,7 +1,7 @@
-Extension { #name : #HiperLogLog }
+Extension { #name : #HyperLogLog }
 
 { #category : #'*PDS-Membership-Inspector-Extensions' }
-HiperLogLog >> arrowedAssociation: originElement to: destinationElement inView: v [
+HyperLogLog >> arrowedAssociation: originElement to: destinationElement inView: v [
 			|arrow line|
 			arrow := RTArrowedLine new color: Color black.
 			arrow attachPoint: RTVerticalAttachPoint new.
@@ -12,7 +12,7 @@ HiperLogLog >> arrowedAssociation: originElement to: destinationElement inView: 
 ]
 
 { #category : #'*PDS-Membership-Inspector-Extensions' }
-HiperLogLog >> gtInspectorParametersIn: composite [
+HyperLogLog >> gtInspectorParametersIn: composite [
 	<gtInspectorPresentationOrder: 2>
 	^ composite fastTable
 		title: 'Parameters';
@@ -28,7 +28,7 @@ HiperLogLog >> gtInspectorParametersIn: composite [
 ]
 
 { #category : #'*PDS-Membership-Inspector-Extensions' }
-HiperLogLog >> gtInspectorPipelineIn: composite [
+HyperLogLog >> gtInspectorPipelineIn: composite [
 	<gtInspectorPresentationOrder: 1>
 	| countersElement totalElements v hashValueElement objectElement hashFunctionElement |
 	^ composite roassal2
@@ -76,12 +76,12 @@ HiperLogLog >> gtInspectorPipelineIn: composite [
 ]
 
 { #category : #'*PDS-Membership-Inspector-Extensions' }
-HiperLogLog >> hashBitAt: aBitPosition [
+HyperLogLog >> hashBitAt: aBitPosition [
 	^ tempHash >> (aBitPosition  - 1) & 16r01 .
 ]
 
 { #category : #'*PDS-Membership-Inspector-Extensions' }
-HiperLogLog >> makeBucketElementsAt: aCountersPosition inView: aView [
+HyperLogLog >> makeBucketElementsAt: aCountersPosition inView: aView [
 	| value colorValue bucketElement |
 	value := counters at: aCountersPosition.
 	colorValue := value = 0
@@ -108,7 +108,7 @@ HiperLogLog >> makeBucketElementsAt: aCountersPosition inView: aView [
 ]
 
 { #category : #'*PDS-Membership-Inspector-Extensions' }
-HiperLogLog >> makeCountersElementInView: aView [
+HyperLogLog >> makeCountersElementInView: aView [
 
 	| countersElement bucketsElements |
 	countersElement := (RTBox + RTLabel borderColor: Color red trans)
@@ -125,7 +125,7 @@ HiperLogLog >> makeCountersElementInView: aView [
 ]
 
 { #category : #'*PDS-Membership-Inspector-Extensions' }
-HiperLogLog >> makeElementWithModel: aModel withWidth: aWidth inView: aView [
+HyperLogLog >> makeElementWithModel: aModel withWidth: aWidth inView: aView [
 	| element |
 	element := (RTBox new
 		width: aWidth;
@@ -136,7 +136,7 @@ HiperLogLog >> makeElementWithModel: aModel withWidth: aWidth inView: aView [
 ]
 
 { #category : #'*PDS-Membership-Inspector-Extensions' }
-HiperLogLog >> makeHashBitElementAt: aBitPosition inView: aView [
+HyperLogLog >> makeHashBitElementAt: aBitPosition inView: aView [
 	| value colorValue bitElement |
 	value := self hashBitAt: aBitPosition.
 	colorValue := value = 0
@@ -154,17 +154,17 @@ HiperLogLog >> makeHashBitElementAt: aBitPosition inView: aView [
 ]
 
 { #category : #'*PDS-Membership-Inspector-Extensions' }
-HiperLogLog >> makeHashFunctionElementInView: aView [
+HyperLogLog >> makeHashFunctionElementInView: aView [
 	| hashFunctionElement |
 	hashFunctionElement := self
-		makeElementWithModel: 'Hash Function'
+		makeElementWithModel: hash
 		withWidth: 120
 		inView: aView.
 	^ hashFunctionElement
 ]
 
 { #category : #'*PDS-Membership-Inspector-Extensions' }
-HiperLogLog >> makeHashIndexBitsElementsInView: aView [
+HyperLogLog >> makeHashIndexBitsElementsInView: aView [
 	| indexBitsElement  |
 	indexBitsElement := (RTBox + (RTLabel new text: 'Index Bits')
 		borderColor: Color red trans)
@@ -184,7 +184,7 @@ HiperLogLog >> makeHashIndexBitsElementsInView: aView [
 ]
 
 { #category : #'*PDS-Membership-Inspector-Extensions' }
-HiperLogLog >> makeHashRestBitsElementsInView: aView [
+HyperLogLog >> makeHashRestBitsElementsInView: aView [
 	| restBitsElement |
 	restBitsElement := (RTBox + (RTLabel new text: 'Rest Bits')
 		borderColor: Color red trans) elementsOn: (Array with: tempRank).
@@ -203,7 +203,7 @@ HiperLogLog >> makeHashRestBitsElementsInView: aView [
 ]
 
 { #category : #'*PDS-Membership-Inspector-Extensions' }
-HiperLogLog >> makeHashValueElementInView: aView [
+HyperLogLog >> makeHashValueElementInView: aView [
 	| hashValueElement restAndIndexElements |
 	hashValueElement := RTBox + RTLabel elementOn: 'Last Hash Value'.
 	aView add: hashValueElement.
@@ -219,7 +219,7 @@ HiperLogLog >> makeHashValueElementInView: aView [
 ]
 
 { #category : #'*PDS-Membership-Inspector-Extensions' }
-HiperLogLog >> makeObjectElementInView: aView [
+HyperLogLog >> makeObjectElementInView: aView [
 	| objectElement |
 	objectElement := self makeElementWithModel: 'Object' withWidth: 60 inView: aView.
 	^ objectElement

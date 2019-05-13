@@ -1,5 +1,5 @@
 Class {
-	#name : #HiperLogLog,
+	#name : #HyperLogLog,
 	#superclass : #Object,
 	#instVars : [
 		'targetStandarError',
@@ -12,29 +12,30 @@ Class {
 		'tempHash',
 		'tempCounterPosition',
 		'tempRank',
-		'hashBits'
+		'hashBits',
+		'hcf'
 	],
 	#category : #'PDS-Cardinality'
 }
 
 { #category : #'private - configuration' }
-HiperLogLog class >> calculateIndexBits: anError [
+HyperLogLog class >> calculateIndexBits: anError [
 	^ (1.04 / (anError  / 100) ** 2 log: 2) roundUpTo: 1
 ]
 
 { #category : #'private - configuration' }
-HiperLogLog class >> calculateMultiSets: anError [
+HyperLogLog class >> calculateMultiSets: anError [
 	^ (1.04 / (anError / 100)) ** 2
 ]
 
 { #category : #'as yet unclassified' }
-HiperLogLog class >> defaultHash [
+HyperLogLog class >> defaultHash [
 ^Murmur3 withSeed: 0
 	
 ]
 
 { #category : #'instance creation' }
-HiperLogLog class >> newWithStandarError: aStandarError [
+HyperLogLog class >> newWithStandarError: aStandarError [
 	"Create a empty HLL with Standar Error between 26% and 0,41%"
 
 	^ self
@@ -43,7 +44,7 @@ HiperLogLog class >> newWithStandarError: aStandarError [
 ]
 
 { #category : #'instance creation' }
-HiperLogLog class >> newWithStandarError: aStandarError andHash: aHash [
+HyperLogLog class >> newWithStandarError: aStandarError andHash: aHash [
 
 	"Create a empty HLL with Standar Error between 26% and 0,41%"
 
@@ -54,7 +55,7 @@ HiperLogLog class >> newWithStandarError: aStandarError andHash: aHash [
 ]
 
 { #category : #api }
-HiperLogLog >> add: anObject [
+HyperLogLog >> add: anObject [
 	
 	tempHash := hash hash: anObject.
 	tempCounterPosition := (tempHash & (2 ** indexBits - 1)) + 1.
@@ -65,7 +66,7 @@ HiperLogLog >> add: anObject [
 ]
 
 { #category : #'private - computing' }
-HiperLogLog >> biasCorrection [
+HyperLogLog >> biasCorrection [
 	indexBits >= 7
 		ifTrue: [ ^ 0.7213 * (2 ** indexBits) / (2 ** indexBits + 1.079) ].
 	indexBits = 6
@@ -77,33 +78,17 @@ HiperLogLog >> biasCorrection [
 ]
 
 { #category : #accessing }
-HiperLogLog >> counters [
+HyperLogLog >> counters [
 ^counters copy .
 ]
 
 { #category : #accessing }
-HiperLogLog >> estimatedElements [
-	| tempElements |
-	tempElements := self biasCorrection * multiSets * self harmonicMean.
-	estimatedElements := tempElements.
-	tempElements <= (5 * multiSets / 2)
-		ifTrue: [ | temp |
-			temp := counters
-				inject: 0
-				into: [ :sum :each | 
-					each = 0
-						ifTrue: [ sum + 1 ]
-						ifFalse: [ sum ] ].
-			temp = 0
-				ifFalse: [ estimatedElements := multiSets * (multiSets / temp) ln ] ]
-		ifFalse: [ tempElements > (2 ** 32 / 30)
-				ifTrue: [ estimatedElements := -1
-						* (2 ** 32 * (1 - (tempElements / (2 * 32)) log)) ] ].
-	^ estimatedElements := estimatedElements roundUpTo: 1
+HyperLogLog >> estimatedElements [
+	^ estimatedElements := hcf estimateElements.
 ]
 
 { #category : #'private - computing' }
-HiperLogLog >> harmonicMean [
+HyperLogLog >> harmonicMean [
 	| total |
 	total := counters
 		inject: 0
@@ -112,12 +97,12 @@ HiperLogLog >> harmonicMean [
 ]
 
 { #category : #accessing }
-HiperLogLog >> hash [
-^counters hash .
+HyperLogLog >> multiSets [
+	^ multiSets
 ]
 
 { #category : #adding }
-HiperLogLog >> rank: anInteger [
+HyperLogLog >> rank: anInteger [
 	1 to: restBits do: [ :i | 
 		(anInteger bitAt: i) = 1
 			ifTrue: [ ^ i ] ].
@@ -125,7 +110,7 @@ HiperLogLog >> rank: anInteger [
 ]
 
 { #category : #initialization }
-HiperLogLog >> setStandarError: aStandarError withHash: aHash [
+HyperLogLog >> setStandarError: aStandarError withHash: aHash [
 	"Initialize the whole HLL variables from a Standar Error"
 
 	targetStandarError := aStandarError.
@@ -138,5 +123,6 @@ HiperLogLog >> setStandarError: aStandarError withHash: aHash [
 	estimatedElements := 0.
 	tempHash := 0.
 	tempCounterPosition := 0.
-	tempRank := 0
+	tempRank := 0.
+	hcf := HLLCorrectionFunction with: self
 ]
