@@ -20,7 +20,11 @@ We've written some posts about the library and the historical and intellectual b
 
 ## Install PharoPDS
 
-To install PharoPDS on your Pharo image you can just execute the following script:
+To install PharoPDS on your Pharo image you can just find it in the **Pharo Project Catalog** and click in the *green mark* icon in the upper right corner to install the latest stable version:
+
+![Pharo Project Catalog with the project selected](doc/images/pharo-project-catalog.png)
+
+Or, you can also execute the following script:
 
 ```Smalltalk
     Metacello new
