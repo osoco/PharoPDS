@@ -114,14 +114,14 @@ BaselineOfProbabilisticDataStructures >> specPackages: spec [
 
 { #category : #'as yet unclassified' }
 BaselineOfProbabilisticDataStructures >> specProjects: spec [
-spec
-				baseline: 'Roassal2'
-				with: [ spec repository: 'github://ObjectProfile/Roassal2/src' ].
-			spec
-				baseline: 'GToolkit'
-				with: [ spec repository: 'github://feenkcom/gtoolkit/src' ].
-			spec
-				baseline: 'NonCryptographicHashes'
-				with:
-					[ spec repository: 'github://osoco/pharo-non-cryptographic-hashes/src' ].
+	spec
+		baseline: 'Roassal2'
+		with: [ spec repository: 'github://ObjectProfile/Roassal2:1df4118/src' ].
+	spec
+		baseline: 'GToolkit'
+		with: [ spec repository: 'github://feenkcom/gtoolkit:v0.6.46/src' ].
+	spec
+		baseline: 'NonCryptographicHashes'
+		with:
+			[ spec repository: 'github://osoco/pharo-non-cryptographic-hashes:v1.0.0/src' ]
 ]
