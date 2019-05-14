@@ -20,7 +20,7 @@ We've written some posts about the library and the historical and intellectual b
 
 ## Install PharoPDS
 
-To install PharoPDS on your Pharo image you can just find it in the **Pharo Project Catalog** and click in the *green mark* icon in the upper right corner to install the latest stable version:
+To install PharoPDS on your Pharo image you can just find it in the **Pharo Project Catalog** (`World menu` > `Tools` > `Catalog Browser`) and click in the *green mark* icon in the upper right corner to install the latest stable version:
 
 ![Pharo Project Catalog with the project selected](doc/images/pharo-project-catalog.png)
 
